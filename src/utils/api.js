@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let BASE_URL = "http://localhost:4000/api/";
+let BASE_URL = "https://facturapp-api.herokuapp.com/api/";
 const DEFAULT_OPTIONS = {
   crossDomain: true,
   responseType: "json",
