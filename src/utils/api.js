@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let BASE_URL = "https://facturapp-api.herokuapp.com/api/";
+let BASE_URL = process.env.REACT_APP_DEV_API_URL;
 const DEFAULT_OPTIONS = {
   crossDomain: true,
   responseType: "json",
