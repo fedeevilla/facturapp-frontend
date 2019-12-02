@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let BASE_URL = process.env.REACT_APP_DEV_API_URL;
+let BASE_URL = process.env.REACT_APP_SERVER_URI;
 const DEFAULT_OPTIONS = {
   crossDomain: true,
   responseType: "json",
