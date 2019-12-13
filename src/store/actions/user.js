@@ -62,7 +62,7 @@ export const logout = createApiThunk({
   request: async () => {
     await sleep(1000);
     localStorage.removeItem("token");
-    window.location.reload();
+    window.location.replace("/");
   }
 });
 
