@@ -29,7 +29,7 @@ const api = {
       return { data: response.data };
     } catch (error) {
       if (error.response.status === 500) {
-        window.location.reload();
+        window.location.replace("/");
       }
 
       return { error };

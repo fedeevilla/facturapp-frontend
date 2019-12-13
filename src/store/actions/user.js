@@ -44,7 +44,7 @@ export const signup = createApiThunk({
 
     setTimeout(() => {
       localStorage.setItem("token", data.token);
-      window.location.reload();
+      window.location.replace("/");
     }, 2000);
   },
   resolvedMessage: {

@@ -44,7 +44,7 @@ const PaymentsList = ({
 
   const totalAmount = () => {
     let total = 0;
-    const lastYear = R.take(2, sortedPayments);
+    const lastYear = R.take(12, sortedPayments);
     lastYear.forEach(({ amount, dollar }) => {
       total += dollar === 0 ? amount : amount * dollar;
     });
