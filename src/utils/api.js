@@ -18,7 +18,8 @@ const api = {
         method: method || "get",
         data,
         headers: {
-          ...DEFAULT_OPTIONS.headers
+          ...DEFAULT_OPTIONS.headers,
+          token: `${localStorage.getItem("token")}`
         },
         ...rest
       });
@@ -32,6 +33,45 @@ const api = {
       }
 
       return { error };
+    }
+  },
+  user: {
+    login: async function(formData) {
+      const { error, data } = await api.request({
+        url: "user/login",
+        method: "post",
+        data: formData
+      });
+
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
+    },
+    signup: async function(formData) {
+      const { error, data } = await api.request({
+        url: "user/signup",
+        method: "post",
+        data: formData
+      });
+
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
+    },
+    fetch: async function() {
+      const { error, data } = await api.request({
+        url: `user/fetch`,
+        method: "GET"
+      });
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
     }
   },
   payments: {

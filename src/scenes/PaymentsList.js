@@ -12,9 +12,15 @@ import {
   deletePayment,
   DELETE_PAYMENT
 } from "../store/actions/payments";
+
+import { logout, LOGOUT } from "../store/actions/user";
 import NewPayment from "./NewPayment";
 
 const Wrapper = styled.div`
+  display: grid;
+  justify-content: center;
+`;
+const WrapperButton = styled.div`
   display: grid;
   justify-content: center;
 `;
@@ -24,16 +30,20 @@ const PaymentsList = ({
   fetchPayments,
   loading,
   deletePayment,
-  deleting
+  deleting,
+  logout,
+  loggingout
 }) => {
   const [showModalPayment, setShowModalPayment] = useState(false);
   useEffect(() => {
     fetchPayments();
   }, [fetchPayments]);
 
+  const sortedPayments = R.sort(R.descend(R.prop("date")), payments);
+
   const totalAmount = () => {
     let total = 0;
-    const lastYear = R.takeLast(12, payments);
+    const lastYear = R.take(2, sortedPayments);
     lastYear.forEach(({ amount, dollar }) => {
       total += dollar === 0 ? amount : amount * dollar;
     });
@@ -99,7 +109,7 @@ const PaymentsList = ({
         style={{ width: 750 }}
         loading={loading}
         columns={columns}
-        dataSource={R.reverse(payments)}
+        dataSource={sortedPayments}
         rowKey="_id"
         footer={() => {
           const total = totalAmount();
@@ -126,6 +136,11 @@ const PaymentsList = ({
           }
         />
       )}
+      <WrapperButton>
+        <Button type="danger" disabled={loggingout} onClick={() => logout()}>
+          Cerrar Sesion
+        </Button>
+      </WrapperButton>
     </Wrapper>
   );
 };
@@ -135,11 +150,13 @@ const enhancer = compose(
     state => ({
       payments: state.payments.list,
       loading: isLoading(FETCH_PAYMENTS, state),
-      deleting: isLoading(DELETE_PAYMENT, state)
+      deleting: isLoading(DELETE_PAYMENT, state),
+      loggingout: isLoading(LOGOUT, state)
     }),
     {
       fetchPayments,
-      deletePayment
+      deletePayment,
+      logout
     }
   )
 );

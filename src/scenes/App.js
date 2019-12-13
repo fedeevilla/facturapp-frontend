@@ -1,6 +1,10 @@
-import React from "react";
-import PaymentsList from "./PaymentsList";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { compose } from "ramda";
 import styled from "styled-components";
+import Login from "./Login";
+import Router from "./Router";
+import { fetchProfile } from "../store/actions/user";
 
 const Content = styled.div`
   justify-content: center;
@@ -12,12 +16,24 @@ const Content = styled.div`
   width: 100%;
 `;
 
-const App = () => {
-  return (
-    <Content>
-      <PaymentsList />
-    </Content>
-  );
+const App = ({ token, userId, fetchProfile }) => {
+  useEffect(() => {
+    if (token && !userId) {
+      fetchProfile();
+    }
+  }, [fetchProfile, token, userId]);
+
+  return <Content>{token ? <Router /> : <Login />}</Content>;
 };
 
-export default App;
+const enhancer = compose(
+  connect(
+    state => ({
+      token: state.user.token,
+      userId: state.user._id
+    }),
+    { fetchProfile }
+  )
+);
+
+export default enhancer(App);
