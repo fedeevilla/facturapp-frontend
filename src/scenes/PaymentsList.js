@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
 import * as R from "ramda";
-import { Table, Button, Popconfirm } from "antd";
+import { Table, Button, Popconfirm, Tag, Alert } from "antd";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import { isLoading } from "../utils/actions";
@@ -24,6 +24,12 @@ const WrapperButton = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 25px;
+`;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const PaymentsList = ({
@@ -107,7 +113,7 @@ const PaymentsList = ({
     <Wrapper>
       <h2>Facturación AFIP</h2>
       <Table
-        style={{ width: 750 }}
+        style={{ width: "100%" }}
         loading={loading}
         columns={columns}
         dataSource={sortedPayments}
@@ -115,17 +121,31 @@ const PaymentsList = ({
         footer={() => {
           const total = totalAmount();
           return (
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <b>
-                <span>
-                  Facturación interanual: ${total} => ${(total / 12).toFixed(2)}
-                  /mes
-                </span>
-              </b>
+            <Footer>
+              <div style={{ display: "flex" }}>
+                <Alert
+                  message={
+                    <b>
+                      <Tag color="green">${total}</Tag>
+                    </b>
+                  }
+                  type="info"
+                />
+                <Alert
+                  style={{ marginLeft: 10 }}
+                  message={
+                    <b>
+                      <Tag color="green">${(total / 12).toFixed(2)}/mes</Tag>
+                    </b>
+                  }
+                  type="info"
+                />
+              </div>
+
               <Button onClick={() => setShowModalPayment(true)} type="primary">
                 Nueva
               </Button>
-            </div>
+            </Footer>
           );
         }}
       />
