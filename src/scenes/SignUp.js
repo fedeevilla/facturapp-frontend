@@ -82,7 +82,7 @@ const SignUp = ({ form, visible, setSignUp, signup, loading }) => {
             <Input
               prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
               autoComplete="name"
-              placeholder="American Amber Ale"
+              placeholder="Ingrese su nombre"
             />
           )}
         </Form.Item>
@@ -117,8 +117,8 @@ const SignUp = ({ form, visible, setSignUp, signup, loading }) => {
                 validator: validateToNextPassword
               },
               {
-                min: 5,
-                message: "Debe tener al menos 5 caracteres"
+                min: 6,
+                message: "Debe tener al menos 6 caracteres"
               }
             ]
           })(<Input.Password />)}

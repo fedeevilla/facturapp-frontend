@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { compose } from "recompose";
 import { Icon, Input, Button, Form } from "antd";
-import { Link } from "react-router-dom";
 import { login, LOGIN } from "../store/actions/user";
 import { isLoading } from "../utils/actions";
 import SignUp from "./SignUp";
@@ -11,15 +10,15 @@ import SignUp from "./SignUp";
 const Content = styled.div`
   display: flex;
   justify-content: center;
-  background: white;
   padding: 30px;
-  border-radius: 4px;
   margin: 0 auto;
   margin-top: 50px;
   width: 300px;
+  background: whitesmoke;
+  border-radius: 15px;
 
   .login-form {
-    max-width: 300px;
+    width: 100%;
   }
   .login-form-forgot {
     float: right;
@@ -27,6 +26,12 @@ const Content = styled.div`
   .login-form-button {
     width: 100%;
   }
+`;
+
+const WrapperButton = styled.div`
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 `;
 
 const Login = ({ form, login, loading }) => {
@@ -67,23 +72,19 @@ const Login = ({ form, login, loading }) => {
             />
           )}
         </Form.Item>
-        <Form.Item>
-          <Link className="login-form-forgot" to="/">
-            ¿Olvidaste tu contraseña?
-          </Link>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-            loading={loading}
-          >
-            Iniciar sesión
-          </Button>
-          ó
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="login-form-button"
+          loading={loading}
+        >
+          Iniciar sesión
+        </Button>
+        <WrapperButton>
           <Button type="link" onClick={() => setSignUp(true)}>
-            Registrarme
+            Quiero registrarme
           </Button>
-        </Form.Item>
+        </WrapperButton>
       </Form>
       {showSignUp && (
         <SignUp

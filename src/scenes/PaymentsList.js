@@ -21,8 +21,9 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 const WrapperButton = styled.div`
-  display: grid;
+  display: flex;
   justify-content: center;
+  margin-top: 25px;
 `;
 
 const PaymentsList = ({
