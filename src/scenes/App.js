@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { compose } from "ramda";
 import styled from "styled-components";
-import Login from "./Login";
+import Login from "../components/Auth/Login";
+import Layout from "../components/Layout/Layout";
 import Router from "./Router";
 import { fetchProfile } from "../store/actions/user";
 
@@ -23,7 +24,11 @@ const App = ({ token, userId, fetchProfile }) => {
     }
   }, [fetchProfile, token, userId]);
 
-  return <Content>{token ? <Router /> : <Login />}</Content>;
+  return (
+    <Layout>
+      <Content>{token ? <Router /> : <Login />}</Content>
+    </Layout>
+  );
 };
 
 const enhancer = compose(

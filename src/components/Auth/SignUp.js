@@ -3,8 +3,8 @@ import * as R from "ramda";
 import { Input, Modal, Form, Button, Icon } from "antd";
 import { connect } from "react-redux";
 import { compose } from "recompose";
-import { signup, SIGNUP } from "../store/actions/user";
-import { isLoading } from "../utils/actions";
+import { signup, SIGNUP } from "../../store/actions/user";
+import { isLoading } from "../../utils/actions";
 
 const SignUp = ({ form, visible, setSignUp, signup, loading }) => {
   const { getFieldDecorator } = form;

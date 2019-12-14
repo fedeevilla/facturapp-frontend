@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { compose } from "recompose";
 import { Icon, Input, Button, Form } from "antd";
-import { login, LOGIN } from "../store/actions/user";
-import { isLoading } from "../utils/actions";
+import { login, LOGIN } from "../../store/actions/user";
+import { isLoading } from "../../utils/actions";
 import SignUp from "./SignUp";
 
 const Content = styled.div`
