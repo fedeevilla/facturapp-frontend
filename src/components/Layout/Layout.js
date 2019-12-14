@@ -105,7 +105,7 @@ const Layout = ({ children, user }) => {
   return (
     <Container>
       <Header className="layout-header">
-        <NavLink to="/payments" style={{ flexBasis: "310px" }}>
+        <NavLink to="/" style={{ flexBasis: "310px" }}>
           <div style={{ display: "flex", alignItems: "center" }}>
             <Title>Facturación AFIP</Title>
           </div>

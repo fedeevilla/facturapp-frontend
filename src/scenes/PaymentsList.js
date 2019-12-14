@@ -17,8 +17,9 @@ import { logout, LOGOUT } from "../store/actions/user";
 import NewPayment from "./NewPayment";
 
 const Wrapper = styled.div`
-  display: grid;
+  display: flex;
   justify-content: center;
+  flex-direction: column;
 `;
 const WrapperButton = styled.div`
   display: flex;
@@ -111,7 +112,6 @@ const PaymentsList = ({
 
   return (
     <Wrapper>
-      <h2>Facturación AFIP</h2>
       <Table
         style={{ width: "100%" }}
         loading={loading}
