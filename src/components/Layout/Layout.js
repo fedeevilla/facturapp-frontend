@@ -115,7 +115,7 @@ const Layout = ({ children, user }) => {
             <StyledLink to="/profile">
               <Avatar
                 className="avatar"
-                src={getOptimizedAvatar(user.imgeUrl)}
+                src={getOptimizedAvatar(user.avatar)}
                 icon="user"
               />
               <span>Perfil</span>

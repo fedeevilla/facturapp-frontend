@@ -7,6 +7,8 @@ export const LOGIN = makeAction("user/LOGIN");
 export const LOGOUT = makeAction("user/LOGOUT");
 export const SIGNUP = makeAction("user/SIGNUP");
 export const FETCH_USER = makeAction("user/FETCH_USER");
+export const UPDATE_USER = makeAction("user/UPDATE_USER");
+export const CHANGE_PASSWORD = makeAction("user/CHANGE_PASSWORD");
 
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
@@ -17,7 +19,8 @@ export const login = createApiThunk({
     localStorage.setItem("token", data.token);
 
     return {
-      ...data
+      token: data.token,
+      ...data.user
     };
   },
   resolvedMessage: {
@@ -69,8 +72,40 @@ export const logout = createApiThunk({
 export const fetchProfile = createApiThunk({
   action: FETCH_USER,
   request: async () => await api.user.fetch(),
+
   rejectedMessage: {
     message: "Error",
     description: "No se pudo cargar el usuario"
+  }
+});
+
+export const updateUser = createApiThunk({
+  action: UPDATE_USER,
+  request: async formData => {
+    const { user } = await api.user.update(formData);
+    return { ...user };
+  },
+  resolvedMessage: {
+    message: "Éxito",
+    description: "El usuario se guardó correctamente"
+  },
+  rejectedMessage: {
+    message: "Error",
+    description: "Hubo problemas con la modificación del usuario."
+  }
+});
+
+export const changePassword = createApiThunk({
+  action: CHANGE_PASSWORD,
+  request: async formData => {
+    await api.user.changePassword(formData);
+  },
+  resolvedMessage: {
+    message: "Éxito",
+    description: "La contraseña se modificó correctamente"
+  },
+  rejectedMessage: {
+    message: "Error",
+    description: "Hubo problemas con la modificación de la contraseña."
   }
 });

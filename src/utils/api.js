@@ -72,6 +72,30 @@ const api = {
       }
 
       return Promise.resolve(data);
+    },
+    update: async function(formData) {
+      const { error, data } = await api.request({
+        url: `user/profile`,
+        method: "PATCH",
+        data: formData
+      });
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
+    },
+    changePassword: async function(formData) {
+      const { error, data } = await api.request({
+        url: `user/password`,
+        method: "PUT",
+        data: formData
+      });
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
     }
   },
   payments: {
