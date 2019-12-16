@@ -5,6 +5,7 @@ import api from "../../utils/api";
 export const FETCH_PAYMENTS = makeAction("payments/FETCH_PAYMENTS");
 export const CREATE_PAYMENT = makeAction("recipes/CREATE_PAYMENT");
 export const DELETE_PAYMENT = makeAction("recipes/DELETE_PAYMENT");
+export const UPDATE_PAYMENT = makeAction("recipes/UPDATE_PAYMENT");
 
 export const fetchPayments = createApiThunk({
   action: FETCH_PAYMENTS,
@@ -17,10 +18,7 @@ export const fetchPayments = createApiThunk({
 
 export const createPayment = createApiThunk({
   action: CREATE_PAYMENT,
-  request: async data => {
-    const payment = await api.payments.create(data);
-    return payment;
-  },
+  request: async data => await api.payments.create(data),
   resolvedMessage: {
     message: "Éxito",
     description: "El pago se guardó correctamente"
@@ -44,5 +42,19 @@ export const deletePayment = createApiThunk({
   rejectedMessage: {
     message: "Error",
     description: "Hubo un problema al eliminar el pago"
+  }
+});
+
+export const updatePayment = createApiThunk({
+  action: UPDATE_PAYMENT,
+  request: async ({ idPayment, formData }) =>
+    await api.payments.update(idPayment, formData),
+  resolvedMessage: {
+    message: "Éxito",
+    description: "El pago se actualizó correctamente"
+  },
+  rejectedMessage: {
+    message: "Error",
+    description: "Hubo un problema al actualizar el pago"
   }
 });

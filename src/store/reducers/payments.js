@@ -1,7 +1,8 @@
 import {
   FETCH_PAYMENTS,
   DELETE_PAYMENT,
-  CREATE_PAYMENT
+  CREATE_PAYMENT,
+  UPDATE_PAYMENT
 } from "../actions/payments";
 import * as R from "ramda";
 
@@ -25,6 +26,14 @@ const payments = (state = initialState, { type, payload = {} }) => {
       return {
         ...state,
         list: R.filter(payment => payment._id !== payload, state.list)
+      };
+    case UPDATE_PAYMENT.RESOLVED:
+      return {
+        ...state,
+        list: R.map(
+          payment => (payment._id === payload._id ? payload : payment),
+          state.list
+        )
       };
     default:
       return state;

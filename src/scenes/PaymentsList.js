@@ -21,10 +21,16 @@ const Wrapper = styled.div`
   justify-content: center;
   flex-direction: column;
 `;
+
 const WrapperButton = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 25px;
+`;
+
+const WrapperActions = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Footer = styled.div`
@@ -43,6 +49,8 @@ const PaymentsList = ({
   loggingout
 }) => {
   const [showModalPayment, setShowModalPayment] = useState(false);
+  const [payment, setPayment] = useState(null);
+
   useEffect(() => {
     fetchPayments();
   }, [fetchPayments]);
@@ -93,19 +101,30 @@ const PaymentsList = ({
       dataIndex: "_id",
       key: "action",
       render: _id => (
-        <Popconfirm
-          title="¿Estás seguro?"
-          onConfirm={() => deletePayment(_id)}
-          okText="Si"
-          cancelText="No"
-        >
+        <WrapperActions>
           <Button
-            loading={deleting}
+            onClick={() => {
+              setPayment(R.find(R.propEq("_id", _id), payments));
+              setShowModalPayment(true);
+            }}
             shape="circle"
-            icon="delete"
-            type="danger"
+            icon="edit"
+            type="primary"
           />
-        </Popconfirm>
+          <Popconfirm
+            title="¿Estás seguro?"
+            onConfirm={() => deletePayment(_id)}
+            okText="Si"
+            cancelText="No"
+          >
+            <Button
+              loading={deleting}
+              shape="circle"
+              icon="delete"
+              type="danger"
+            />
+          </Popconfirm>
+        </WrapperActions>
       )
     }
   ];
@@ -151,6 +170,7 @@ const PaymentsList = ({
       />
       {showModalPayment && (
         <NewPayment
+          payment={payment}
           visible={showModalPayment}
           setShowModalPayment={showModalPayment =>
             setShowModalPayment(showModalPayment)

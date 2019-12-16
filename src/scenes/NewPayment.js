@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { compose } from "recompose";
 import { connect } from "react-redux";
+import moment from "moment";
+import * as R from "ramda";
 import { InputNumber, Modal, Form, Button, DatePicker } from "antd";
-import { CREATE_PAYMENT, createPayment } from "../store/actions/payments";
+import {
+  CREATE_PAYMENT,
+  UPDATE_PAYMENT,
+  createPayment,
+  updatePayment
+} from "../store/actions/payments";
 import { isLoading } from "../utils/actions";
 
 const { MonthPicker } = DatePicker;
@@ -12,9 +19,19 @@ const NewPayment = ({
   visible,
   setShowModalPayment,
   loading,
-  createPayment
+  createPayment,
+  payment,
+  updatePayment
 }) => {
-  const { getFieldDecorator } = form;
+  const { getFieldDecorator, setFieldsValue } = form;
+
+  useEffect(() => {
+    if (payment) {
+      setFieldsValue({
+        ...R.assoc("date", moment(payment.date), payment)
+      });
+    }
+  }, [setFieldsValue, payment]);
 
   return (
     <Modal
@@ -43,10 +60,20 @@ const NewPayment = ({
             e.preventDefault();
             form.validateFields(async (err, values) => {
               if (!err) {
-                await createPayment({
-                  ...values,
-                  date: new Date(values.date).getTime()
-                });
+                if (!payment) {
+                  await createPayment({
+                    ...values,
+                    date: new Date(values.date).getTime()
+                  });
+                } else {
+                  await updatePayment({
+                    idPayment: payment._id,
+                    formData: {
+                      ...values,
+                      date: new Date(values.date).getTime()
+                    }
+                  });
+                }
                 setShowModalPayment(false);
               }
             });
@@ -103,9 +130,10 @@ const enhancer = compose(
   Form.create(),
   connect(
     state => ({
-      loading: isLoading(CREATE_PAYMENT, state)
+      loading:
+        isLoading(CREATE_PAYMENT, state) || isLoading(UPDATE_PAYMENT, state)
     }),
-    { createPayment }
+    { createPayment, updatePayment }
   )
 );
 

@@ -134,6 +134,19 @@ const api = {
       }
 
       return Promise.resolve(data);
+    },
+    update: async function(idPayment, formData) {
+      const { error, data } = await api.request({
+        url: `payments/${idPayment}`,
+        method: "PUT",
+        data: formData
+      });
+
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
     }
   }
 };
