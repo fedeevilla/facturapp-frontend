@@ -5,34 +5,34 @@ import moment from "moment";
 import * as R from "ramda";
 import { InputNumber, Modal, Form, Button, DatePicker, Popconfirm } from "antd";
 import {
-  CREATE_PAYMENT,
-  UPDATE_PAYMENT,
-  createPayment,
-  updatePayment
-} from "../store/actions/payments";
+  CREATE_INVOICE,
+  UPDATE_INVOICE,
+  createInvoice,
+  updateInvoice
+} from "../store/actions/invoices";
 import { isLoading } from "../utils/actions";
 import Upload from "../components/Upload";
 
 const { MonthPicker } = DatePicker;
 
-const NewPayment = ({
+const NewInvoice = ({
   form,
   visible,
-  setShowModalPayment,
+  setShowModalInvoice,
   loading,
-  createPayment,
-  payment,
-  updatePayment
+  createInvoice,
+  invoice,
+  updateInvoice
 }) => {
   const { getFieldDecorator, setFieldsValue, getFieldValue } = form;
 
   useEffect(() => {
-    if (payment) {
+    if (invoice) {
       setFieldsValue({
-        ...R.assoc("date", moment(payment.date), payment)
+        ...R.assoc("date", moment(invoice.date), invoice)
       });
     }
-  }, [setFieldsValue, payment]);
+  }, [invoice, setFieldsValue]);
 
   return (
     <Modal
@@ -40,16 +40,16 @@ const NewPayment = ({
       visible={visible}
       destroyOnClose={true}
       closable={!loading}
-      onCancel={() => !loading && setShowModalPayment(false)}
+      onCancel={() => !loading && setShowModalInvoice(false)}
       maskClosable={false}
-      title={payment ? "Editar factura" : "Nueva factura"}
+      title={invoice ? "Editar factura" : "Nueva factura"}
       footer={[
         <Button
           key="close"
           icon="close-circle"
           type="defualt"
           disabled={loading}
-          onClick={() => !loading && setShowModalPayment(false)}
+          onClick={() => !loading && setShowModalInvoice(false)}
         >
           Cerrar
         </Button>,
@@ -62,21 +62,21 @@ const NewPayment = ({
             e.preventDefault();
             form.validateFields(async (err, values) => {
               if (!err) {
-                if (!payment) {
-                  await createPayment({
+                if (!invoice) {
+                  await createInvoice({
                     ...values,
                     date: new Date(values.date).getTime()
                   });
                 } else {
-                  await updatePayment({
-                    idPayment: payment._id,
+                  await updateInvoice({
+                    idInvoice: invoice._id,
                     formData: {
                       ...values,
                       date: new Date(values.date).getTime()
                     }
                   });
                 }
-                setShowModalPayment(false);
+                setShowModalInvoice(false);
               }
             });
           }}
@@ -141,7 +141,7 @@ const NewPayment = ({
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={payment.pdf}
+                    href={invoice.pdf}
                   >
                     <Button
                       type="primary"
@@ -179,10 +179,10 @@ const enhancer = compose(
   connect(
     state => ({
       loading:
-        isLoading(CREATE_PAYMENT, state) || isLoading(UPDATE_PAYMENT, state)
+        isLoading(CREATE_INVOICE, state) || isLoading(UPDATE_INVOICE, state)
     }),
-    { createPayment, updatePayment }
+    { createInvoice, updateInvoice }
   )
 );
 
-export default enhancer(NewPayment);
+export default enhancer(NewInvoice);

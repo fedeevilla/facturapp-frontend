@@ -7,14 +7,14 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 import { isLoading } from "../utils/actions";
 import {
-  FETCH_PAYMENTS,
-  fetchPayments,
-  deletePayment,
-  DELETE_PAYMENT
-} from "../store/actions/payments";
+  FETCH_INVOICES,
+  fetchiInvoices,
+  deleteInvoice,
+  DELETE_INVOICE
+} from "../store/actions/invoices";
 
 import { logout, LOGOUT } from "../store/actions/user";
-import NewPayment from "./NewPayment";
+import NewInvoice from "./NewInvoice";
 
 const Wrapper = styled.div`
   display: flex;
@@ -34,27 +34,27 @@ const Footer = styled.div`
   align-items: center;
 `;
 
-const PaymentsList = ({
-  payments,
-  fetchPayments,
+const InvoicesList = ({
+  invoices,
+  fetchiInvoices,
   loading,
-  deletePayment,
+  deleteInvoice,
   deleting,
   logout,
   loggingout
 }) => {
-  const [showModalPayment, setShowModalPayment] = useState(false);
-  const [payment, setPayment] = useState(null);
+  const [showModalInvoice, setShowModalInvoice] = useState(false);
+  const [invoice, setInvoice] = useState(null);
 
   useEffect(() => {
-    fetchPayments();
-  }, [fetchPayments]);
+    fetchiInvoices();
+  }, [fetchiInvoices]);
 
-  const sortedPayments = R.sort(R.descend(R.prop("date")), payments);
+  const sortedinvoices = R.sort(R.descend(R.prop("date")), invoices);
 
   const totalAmount = () => {
     let total = 0;
-    const lastYear = R.take(12, sortedPayments);
+    const lastYear = R.take(12, sortedinvoices);
     lastYear.forEach(({ amount, dollar }) => {
       total += dollar === 0 ? amount : amount * dollar;
     });
@@ -96,15 +96,15 @@ const PaymentsList = ({
       dataIndex: "_id",
       key: "action",
       render: _id => {
-        const payment = R.find(R.propEq("_id", _id), payments);
+        const invoice = R.find(R.propEq("_id", _id), invoices);
 
         return (
           <>
             <Tooltip title="Editar factura">
               <Button
                 onClick={() => {
-                  setPayment(payment);
-                  setShowModalPayment(true);
+                  setInvoice(invoice);
+                  setShowModalInvoice(true);
                 }}
                 shape="circle"
                 icon="edit"
@@ -114,7 +114,7 @@ const PaymentsList = ({
             </Tooltip>
             <Popconfirm
               title="¿Estás seguro?"
-              onConfirm={() => deletePayment(_id)}
+              onConfirm={() => deleteInvoice(_id)}
               okText="Eliminar"
               cancelText="Cancelar"
             >
@@ -128,8 +128,8 @@ const PaymentsList = ({
                 />
               </Tooltip>
             </Popconfirm>
-            {payment.pdf && (
-              <a target="_blank" rel="noopener noreferrer" href={payment.pdf}>
+            {invoice.pdf && (
+              <a target="_blank" rel="noopener noreferrer" href={invoice.pdf}>
                 <Tooltip title="Ver factura">
                   <Button shape="circle" icon="file" type="default" />
                 </Tooltip>
@@ -147,7 +147,7 @@ const PaymentsList = ({
         style={{ width: "100%" }}
         loading={loading}
         columns={columns}
-        dataSource={sortedPayments}
+        dataSource={sortedinvoices}
         rowKey="_id"
         footer={() => {
           const total = totalAmount();
@@ -175,8 +175,8 @@ const PaymentsList = ({
 
               <Button
                 onClick={() => {
-                  setPayment(null);
-                  setShowModalPayment(true);
+                  setInvoice(null);
+                  setShowModalInvoice(true);
                 }}
                 type="primary"
               >
@@ -186,11 +186,11 @@ const PaymentsList = ({
           );
         }}
       />
-      {showModalPayment && (
-        <NewPayment
-          payment={payment}
-          visible={showModalPayment}
-          setShowModalPayment={setShowModalPayment}
+      {showModalInvoice && (
+        <NewInvoice
+          invoice={invoice}
+          visible={showModalInvoice}
+          setShowModalInvoice={setShowModalInvoice}
         />
       )}
       <WrapperButton>
@@ -205,17 +205,17 @@ const PaymentsList = ({
 const enhancer = compose(
   connect(
     state => ({
-      payments: state.payments.list,
-      loading: isLoading(FETCH_PAYMENTS, state),
-      deleting: isLoading(DELETE_PAYMENT, state),
+      invoices: state.invoices.list,
+      loading: isLoading(FETCH_INVOICES, state),
+      deleting: isLoading(DELETE_INVOICE, state),
       loggingout: isLoading(LOGOUT, state)
     }),
     {
-      fetchPayments,
-      deletePayment,
+      fetchiInvoices,
+      deleteInvoice,
       logout
     }
   )
 );
 
-export default enhancer(PaymentsList);
+export default enhancer(InvoicesList);

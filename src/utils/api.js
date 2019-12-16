@@ -98,10 +98,10 @@ const api = {
       return Promise.resolve(data);
     }
   },
-  payments: {
+  invoices: {
     fetch: async function() {
       const { error, data } = await api.request({
-        url: `payments`,
+        url: `invoices`,
         method: "GET"
       });
       if (error) {
@@ -112,7 +112,7 @@ const api = {
     },
     create: async function(formData) {
       const { error, data } = await api.request({
-        url: `payments`,
+        url: `invoices`,
         method: "POST",
         data: formData
       });
@@ -123,9 +123,9 @@ const api = {
 
       return data;
     },
-    delete: async function(idPayment) {
+    delete: async function(idInvoice) {
       const { error, data } = await api.request({
-        url: `payments/${idPayment}`,
+        url: `invoices/${idInvoice}`,
         method: "DELETE"
       });
 
@@ -135,9 +135,9 @@ const api = {
 
       return Promise.resolve(data);
     },
-    update: async function(idPayment, formData) {
+    update: async function(idInvoice, formData) {
       const { error, data } = await api.request({
-        url: `payments/${idPayment}`,
+        url: `invoices/${idInvoice}`,
         method: "PUT",
         data: formData
       });
