@@ -41,7 +41,8 @@ const InvoicesList = ({
   deleteInvoice,
   deleting,
   logout,
-  loggingout
+  loggingout,
+  idDeleting
 }) => {
   const [showModalInvoice, setShowModalInvoice] = useState(false);
   const [invoice, setInvoice] = useState(null);
@@ -120,7 +121,7 @@ const InvoicesList = ({
             >
               <Tooltip title="Eliminar factura">
                 <Button
-                  loading={deleting}
+                  loading={deleting && idDeleting === _id}
                   shape="circle"
                   icon="delete"
                   type="danger"
@@ -208,7 +209,8 @@ const enhancer = compose(
       invoices: state.invoices.list,
       loading: isLoading(FETCH_INVOICES, state),
       deleting: isLoading(DELETE_INVOICE, state),
-      loggingout: isLoading(LOGOUT, state)
+      loggingout: isLoading(LOGOUT, state),
+      idDeleting: state.invoices.idDeleting
     }),
     {
       fetchiInvoices,
