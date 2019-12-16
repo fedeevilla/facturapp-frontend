@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
 import * as R from "ramda";
-import { Table, Button, Popconfirm, Tag, Alert } from "antd";
+import { Table, Button, Popconfirm, Tag, Alert, Tooltip } from "antd";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import { isLoading } from "../utils/actions";
@@ -100,32 +100,47 @@ const PaymentsList = ({
       title: "Acción",
       dataIndex: "_id",
       key: "action",
-      render: _id => (
-        <WrapperActions>
-          <Button
-            onClick={() => {
-              setPayment(R.find(R.propEq("_id", _id), payments));
-              setShowModalPayment(true);
-            }}
-            shape="circle"
-            icon="edit"
-            type="primary"
-          />
-          <Popconfirm
-            title="¿Estás seguro?"
-            onConfirm={() => deletePayment(_id)}
-            okText="Si"
-            cancelText="No"
-          >
-            <Button
-              loading={deleting}
-              shape="circle"
-              icon="delete"
-              type="danger"
-            />
-          </Popconfirm>
-        </WrapperActions>
-      )
+      render: _id => {
+        const payment = R.find(R.propEq("_id", _id), payments);
+
+        return (
+          <WrapperActions>
+            <Tooltip title="Editar pago">
+              <Button
+                onClick={() => {
+                  setPayment(payment);
+                  setShowModalPayment(true);
+                }}
+                shape="circle"
+                icon="edit"
+                type="primary"
+              />
+            </Tooltip>
+            {payment.pdf && (
+              <a target="_blank" rel="noopener noreferrer" href={payment.pdf}>
+                <Tooltip title="Ver factura">
+                  <Button shape="circle" icon="file" type="dashed" />
+                </Tooltip>
+              </a>
+            )}
+            <Popconfirm
+              title="¿Estás seguro?"
+              onConfirm={() => deletePayment(_id)}
+              okText="Eliminar"
+              cancelText="Cancelar"
+            >
+              <Tooltip title="Eliminar pago">
+                <Button
+                  loading={deleting}
+                  shape="circle"
+                  icon="delete"
+                  type="danger"
+                />
+              </Tooltip>
+            </Popconfirm>
+          </WrapperActions>
+        );
+      }
     }
   ];
 

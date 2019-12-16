@@ -3,7 +3,7 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 import moment from "moment";
 import * as R from "ramda";
-import { InputNumber, Modal, Form, Button, DatePicker } from "antd";
+import { InputNumber, Modal, Form, Button, DatePicker, Popconfirm } from "antd";
 import {
   CREATE_PAYMENT,
   UPDATE_PAYMENT,
@@ -11,6 +11,7 @@ import {
   updatePayment
 } from "../store/actions/payments";
 import { isLoading } from "../utils/actions";
+import Upload from "../components/Upload";
 
 const { MonthPicker } = DatePicker;
 
@@ -23,7 +24,7 @@ const NewPayment = ({
   payment,
   updatePayment
 }) => {
-  const { getFieldDecorator, setFieldsValue } = form;
+  const { getFieldDecorator, setFieldsValue, getFieldValue } = form;
 
   useEffect(() => {
     if (payment) {
@@ -119,6 +120,46 @@ const NewPayment = ({
         <Form.Item label="Dólar:" name="dollar">
           {getFieldDecorator("dollar")(
             <InputNumber min={0} placeholder="20" style={{ width: "100%" }} />
+          )}
+        </Form.Item>
+        <Form.Item label="PDF:" name="pdf" style={{ display: "flex" }}>
+          {getFieldDecorator("pdf")(
+            <>
+              {!getFieldValue("pdf") && (
+                <Upload
+                  label={"Seleccionar PDF"}
+                  options={{ upload_preset: "invoices" }}
+                  action={process.env.REACT_APP_CLOUDINARY_URI}
+                  onChange={pdf => {
+                    setFieldsValue({ pdf });
+                  }}
+                />
+              )}
+              {getFieldValue("pdf") && (
+                <>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={payment.pdf}
+                  >
+                    Ver Factura
+                  </a>
+                  <Popconfirm
+                    title="¿Estás seguro?"
+                    onConfirm={() => setFieldsValue({ pdf: null })}
+                    okText="Eliminar"
+                    cancelText="Cancelar"
+                  >
+                    <Button
+                      shape="circle"
+                      icon="delete"
+                      type="danger"
+                      style={{ marginLeft: 20 }}
+                    />
+                  </Popconfirm>
+                </>
+              )}
+            </>
           )}
         </Form.Item>
       </Form>
