@@ -39,9 +39,10 @@ const NewPayment = ({
       width="700px"
       visible={visible}
       destroyOnClose={true}
+      closable={!loading}
       onCancel={() => !loading && setShowModalPayment(false)}
       maskClosable={false}
-      title="Nuevo Pago"
+      title={payment ? "Editar factura" : "Nueva factura"}
       footer={[
         <Button
           key="close"
@@ -142,7 +143,13 @@ const NewPayment = ({
                     rel="noopener noreferrer"
                     href={payment.pdf}
                   >
-                    Ver Factura
+                    <Button
+                      type="primary"
+                      icon="file"
+                      style={{ marginLeft: 20 }}
+                    >
+                      Ver Factura
+                    </Button>
                   </a>
                   <Popconfirm
                     title="¿Estás seguro?"

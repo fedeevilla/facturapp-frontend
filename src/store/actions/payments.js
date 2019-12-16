@@ -12,7 +12,7 @@ export const fetchPayments = createApiThunk({
   request: async () => await api.payments.fetch(),
   rejectedMessage: {
     message: "Error",
-    description: "No se pudo cargar la lista de pagos"
+    description: "No se pudo cargar la lista de facturas"
   }
 });
 
@@ -21,11 +21,11 @@ export const createPayment = createApiThunk({
   request: async data => await api.payments.create(data),
   resolvedMessage: {
     message: "Éxito",
-    description: "El pago se guardó correctamente"
+    description: "La factura se guardó correctamente"
   },
   rejectedMessage: {
     message: "Error",
-    description: "Hubo un problema al guardar el pago"
+    description: "Hubo un problema al guardar la factura"
   }
 });
 
@@ -37,11 +37,11 @@ export const deletePayment = createApiThunk({
   },
   resolvedMessage: {
     message: "Éxito",
-    description: "El pago se eliminó correctamente"
+    description: "La factura se eliminó correctamente"
   },
   rejectedMessage: {
     message: "Error",
-    description: "Hubo un problema al eliminar el pago"
+    description: "Hubo un problema al eliminar la factura"
   }
 });
 
@@ -51,10 +51,10 @@ export const updatePayment = createApiThunk({
     await api.payments.update(idPayment, formData),
   resolvedMessage: {
     message: "Éxito",
-    description: "El pago se actualizó correctamente"
+    description: "La factura se actualizó correctamente"
   },
   rejectedMessage: {
     message: "Error",
-    description: "Hubo un problema al actualizar el pago"
+    description: "Hubo un problema al actualizar la factura"
   }
 });

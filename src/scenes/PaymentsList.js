@@ -28,11 +28,6 @@ const WrapperButton = styled.div`
   margin-top: 25px;
 `;
 
-const WrapperActions = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
 const Footer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -104,8 +99,8 @@ const PaymentsList = ({
         const payment = R.find(R.propEq("_id", _id), payments);
 
         return (
-          <WrapperActions>
-            <Tooltip title="Editar pago">
+          <>
+            <Tooltip title="Editar factura">
               <Button
                 onClick={() => {
                   setPayment(payment);
@@ -114,31 +109,33 @@ const PaymentsList = ({
                 shape="circle"
                 icon="edit"
                 type="primary"
+                style={{ marginRight: 20 }}
               />
             </Tooltip>
-            {payment.pdf && (
-              <a target="_blank" rel="noopener noreferrer" href={payment.pdf}>
-                <Tooltip title="Ver factura">
-                  <Button shape="circle" icon="file" type="dashed" />
-                </Tooltip>
-              </a>
-            )}
             <Popconfirm
               title="¿Estás seguro?"
               onConfirm={() => deletePayment(_id)}
               okText="Eliminar"
               cancelText="Cancelar"
             >
-              <Tooltip title="Eliminar pago">
+              <Tooltip title="Eliminar factura">
                 <Button
                   loading={deleting}
                   shape="circle"
                   icon="delete"
                   type="danger"
+                  style={{ marginRight: 20 }}
                 />
               </Tooltip>
             </Popconfirm>
-          </WrapperActions>
+            {payment.pdf && (
+              <a target="_blank" rel="noopener noreferrer" href={payment.pdf}>
+                <Tooltip title="Ver factura">
+                  <Button shape="circle" icon="file" type="default" />
+                </Tooltip>
+              </a>
+            )}
+          </>
         );
       }
     }
@@ -176,8 +173,14 @@ const PaymentsList = ({
                 />
               </div>
 
-              <Button onClick={() => setShowModalPayment(true)} type="primary">
-                Nueva
+              <Button
+                onClick={() => {
+                  setPayment(null);
+                  setShowModalPayment(true);
+                }}
+                type="primary"
+              >
+                Nueva factura
               </Button>
             </Footer>
           );
@@ -187,9 +190,7 @@ const PaymentsList = ({
         <NewPayment
           payment={payment}
           visible={showModalPayment}
-          setShowModalPayment={showModalPayment =>
-            setShowModalPayment(showModalPayment)
-          }
+          setShowModalPayment={setShowModalPayment}
         />
       )}
       <WrapperButton>
