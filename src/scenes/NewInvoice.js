@@ -141,7 +141,7 @@ const NewInvoice = ({
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={invoice.pdf}
+                    href={getFieldValue("pdf")}
                   >
                     <Button
                       type="primary"
