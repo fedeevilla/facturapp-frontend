@@ -161,7 +161,7 @@ const NewInvoice = ({
                       shape="circle"
                       icon="delete"
                       type="danger"
-                      style={{ marginLeft: 20 }}
+                      style={{ marginLeft: 20, verticalAlign: "middle" }}
                     />
                   </Popconfirm>
                 </>

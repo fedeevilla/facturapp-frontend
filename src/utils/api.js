@@ -96,6 +96,17 @@ const api = {
       }
 
       return Promise.resolve(data);
+    },
+    activate: async function(token) {
+      const { error, data } = await api.request({
+        url: `user/validate/${token}`,
+        method: "GET"
+      });
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
     }
   },
   invoices: {
