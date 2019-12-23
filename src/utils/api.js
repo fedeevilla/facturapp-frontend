@@ -87,7 +87,7 @@ const api = {
     },
     changePassword: async function(formData) {
       const { error, data } = await api.request({
-        url: `user/password`,
+        url: `user/reset`,
         method: "PUT",
         data: formData
       });
@@ -100,7 +100,31 @@ const api = {
     activate: async function(token) {
       const { error, data } = await api.request({
         url: `user/validate/${token}`,
-        method: "GET"
+        method: "PUT"
+      });
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
+    },
+    recoveryPassword: async function(token, formData) {
+      const { error, data } = await api.request({
+        url: `user/recover/${token}`,
+        method: "PUT",
+        data: formData
+      });
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
+    },
+    sendEmailPassword: async function(formData) {
+      const { error, data } = await api.request({
+        url: `user/recover`,
+        method: "PUT",
+        data: formData
       });
       if (error) {
         return Promise.reject(error);

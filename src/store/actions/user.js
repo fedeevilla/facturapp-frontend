@@ -10,6 +10,7 @@ export const FETCH_USER = makeAction("user/FETCH_USER");
 export const UPDATE_USER = makeAction("user/UPDATE_USER");
 export const CHANGE_PASSWORD = makeAction("user/CHANGE_PASSWORD");
 export const ACTIVATE_USER = makeAction("user/ACTIVATE_USER");
+export const RECOVERY_PASSWORD = makeAction("user/RECOVERY_PASSWORD");
 
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
@@ -66,10 +67,16 @@ export const logout = createApiThunk({
 export const fetchProfile = createApiThunk({
   action: FETCH_USER,
   request: async () => await api.user.fetch(),
+  rejectedMessage: () => {
+    setTimeout(() => {
+      localStorage.removeItem("token");
+      window.location.replace("/");
+    }, 2000);
 
-  rejectedMessage: {
-    message: "Error",
-    description: "No se pudo cargar el usuario"
+    return {
+      message: "Error",
+      description: "No se pudo cargar el usuario"
+    };
   }
 });
 
@@ -122,5 +129,40 @@ export const activateUser = createApiThunk({
   rejectedMessage: {
     message: "Error",
     description: "Hubo problemas con la activación de la cuenta."
+  }
+});
+
+export const recoveryPassword = createApiThunk({
+  action: RECOVERY_PASSWORD,
+  request: async ({ token, formData }) => {
+    await api.user.recoveryPassword(token, formData);
+  },
+  resolvedMessage: () => {
+    setTimeout(() => {
+      window.location.replace("/");
+    }, 2000);
+    return {
+      message: "Éxito",
+      description: "La contraseña se modificó correctamente"
+    };
+  },
+  rejectedMessage: {
+    message: "Error",
+    description: "Hubo problemas con la modificación de la contraseña."
+  }
+});
+
+export const sendEmailPassword = createApiThunk({
+  action: RECOVERY_PASSWORD,
+  request: async formData => {
+    await api.user.sendEmailPassword(formData);
+  },
+  resolvedMessage: {
+    message: "Éxito",
+    description: "Se ha enviado un email para restaurar la contraseña"
+  },
+  rejectedMessage: {
+    message: "Error",
+    description: "Hubo problemas con el envío del email."
   }
 });

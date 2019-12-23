@@ -47,7 +47,7 @@ const NewInvoice = ({
         <Button
           key="close"
           icon="close-circle"
-          type="defualt"
+          type="default"
           disabled={loading}
           onClick={() => !loading && setShowModalInvoice(false)}
         >

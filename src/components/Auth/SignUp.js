@@ -41,7 +41,7 @@ const SignUp = ({ form, visible, setSignUp, signup, loading }) => {
         <Button
           key="close"
           icon="close-circle"
-          type="defualt"
+          type="default"
           onClick={() => setSignUp(false)}
         >
           Cerrar
