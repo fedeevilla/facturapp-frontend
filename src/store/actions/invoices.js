@@ -1,11 +1,13 @@
 import { makeAction } from "async-action-creator";
+import * as R from "ramda";
 import { createApiThunk } from "../../utils/thunk";
 import api from "../../utils/api";
 
 export const FETCH_INVOICES = makeAction("invoices/FETCH_INVOICES");
-export const CREATE_INVOICE = makeAction("recipes/CREATE_INVOICE");
-export const DELETE_INVOICE = makeAction("recipes/DELETE_INVOICE");
-export const UPDATE_INVOICE = makeAction("recipes/UPDATE_INVOICE");
+export const CREATE_INVOICE = makeAction("invoices/CREATE_INVOICE");
+export const DELETE_INVOICE = makeAction("invoices/DELETE_INVOICE");
+export const UPDATE_INVOICE = makeAction("invoices/UPDATE_INVOICE");
+export const DUPLICATE_INVOICE = makeAction("invoices/DUPLICATE_INVOICE");
 
 export const fetchiInvoices = createApiThunk({
   action: FETCH_INVOICES,
@@ -56,5 +58,21 @@ export const updateInvoice = createApiThunk({
   rejectedMessage: {
     message: "Error",
     description: "Hubo un problema al actualizar la factura"
+  }
+});
+
+export const duplicateInvoice = createApiThunk({
+  action: DUPLICATE_INVOICE,
+  request: async data =>
+    await api.invoices.create(
+      R.pipe(R.dissoc("_id"), R.dissoc("idUser"))(data)
+    ),
+  resolvedMessage: {
+    message: "Éxito",
+    description: "La factura se duplicó correctamente"
+  },
+  rejectedMessage: {
+    message: "Error",
+    description: "Hubo un problema al duplicar la factura"
   }
 });

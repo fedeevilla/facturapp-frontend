@@ -7,10 +7,12 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 import { isLoading } from "../utils/actions";
 import {
-  FETCH_INVOICES,
   fetchiInvoices,
+  FETCH_INVOICES,
   deleteInvoice,
-  DELETE_INVOICE
+  DELETE_INVOICE,
+  duplicateInvoice,
+  DUPLICATE_INVOICE
 } from "../store/actions/invoices";
 
 import { logout, LOGOUT } from "../store/actions/user";
@@ -41,7 +43,10 @@ const InvoicesList = ({
   deleting,
   logout,
   loggingout,
-  idDeleting
+  idDeleting,
+  duplicateInvoice,
+  duplicating,
+  idDuplicating
 }) => {
   const [showModalInvoice, setShowModalInvoice] = useState(false);
   const [invoice, setInvoice] = useState(null);
@@ -119,6 +124,16 @@ const InvoicesList = ({
                 />
               </Tooltip>
             </Popconfirm>
+            <Tooltip title="Duplicar factura">
+              <Button
+                onClick={async () => await duplicateInvoice(invoice)}
+                loading={duplicating && idDuplicating === _id}
+                shape="circle"
+                icon="plus"
+                type="dashed"
+                style={{ marginRight: 20 }}
+              />
+            </Tooltip>
             {invoice.pdf && (
               <a target="_blank" rel="noopener noreferrer" href={invoice.pdf}>
                 <Tooltip title="Ver factura">
@@ -177,12 +192,15 @@ const enhancer = compose(
       invoices: state.invoices.list,
       loading: isLoading(FETCH_INVOICES, state),
       deleting: isLoading(DELETE_INVOICE, state),
+      duplicating: isLoading(DUPLICATE_INVOICE, state),
       loggingout: isLoading(LOGOUT, state),
-      idDeleting: state.invoices.idDeleting
+      idDeleting: state.invoices.idDeleting,
+      idDuplicating: state.invoices.idDuplicating
     }),
     {
       fetchiInvoices,
       deleteInvoice,
+      duplicateInvoice,
       logout
     }
   )
