@@ -9,8 +9,7 @@ import * as R from "ramda";
 
 const initialState = {
   list: [],
-  idDeleting: null,
-  idDuplicating: null
+  idLoading: null
 };
 
 const invoices = (state = initialState, { type, payload = {} }) => {
@@ -23,25 +22,25 @@ const invoices = (state = initialState, { type, payload = {} }) => {
     case DUPLICATE_INVOICE.STARTED:
       return {
         ...state,
-        idDuplicating: payload._id
+        idLoading: payload._id
       };
     case DUPLICATE_INVOICE.RESOLVED:
     case CREATE_INVOICE.RESOLVED:
       return {
         ...state,
         list: R.append(payload, state.list),
-        idDuplicating: null
+        idLoading: null
       };
     case DELETE_INVOICE.STARTED:
       return {
         ...state,
-        idDeleting: payload
+        idLoading: payload
       };
     case DELETE_INVOICE.RESOLVED:
       return {
         ...state,
         list: R.filter(invoice => invoice._id !== payload, state.list),
-        idDeleting: null
+        idLoading: null
       };
     case UPDATE_INVOICE.RESOLVED:
       return {

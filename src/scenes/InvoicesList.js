@@ -43,10 +43,9 @@ const InvoicesList = ({
   deleting,
   logout,
   loggingout,
-  idDeleting,
+  idLoading,
   duplicateInvoice,
-  duplicating,
-  idDuplicating
+  duplicating
 }) => {
   const [showModalInvoice, setShowModalInvoice] = useState(false);
   const [invoice, setInvoice] = useState(null);
@@ -116,7 +115,7 @@ const InvoicesList = ({
             >
               <Tooltip title="Eliminar factura">
                 <Button
-                  loading={deleting && idDeleting === _id}
+                  loading={deleting && idLoading === _id}
                   shape="circle"
                   icon="delete"
                   type="danger"
@@ -127,7 +126,7 @@ const InvoicesList = ({
             <Tooltip title="Duplicar factura">
               <Button
                 onClick={async () => await duplicateInvoice(invoice)}
-                loading={duplicating && idDuplicating === _id}
+                loading={duplicating && idLoading === _id}
                 shape="circle"
                 icon="plus"
                 type="dashed"
@@ -179,7 +178,7 @@ const InvoicesList = ({
       )}
       <WrapperButton>
         <Button type="danger" disabled={loggingout} onClick={() => logout()}>
-          Cerrar Sesion
+          Cerrar Sesión
         </Button>
       </WrapperButton>
     </Wrapper>
@@ -194,8 +193,7 @@ const enhancer = compose(
       deleting: isLoading(DELETE_INVOICE, state),
       duplicating: isLoading(DUPLICATE_INVOICE, state),
       loggingout: isLoading(LOGOUT, state),
-      idDeleting: state.invoices.idDeleting,
-      idDuplicating: state.invoices.idDuplicating
+      idLoading: state.invoices.idLoading
     }),
     {
       fetchiInvoices,
