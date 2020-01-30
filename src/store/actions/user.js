@@ -82,10 +82,7 @@ export const fetchProfile = createApiThunk({
 
 export const updateUser = createApiThunk({
   action: UPDATE_USER,
-  request: async formData => {
-    const { user } = await api.user.update(formData);
-    return { ...user };
-  },
+  request: async formData => await api.user.update(formData),
   resolvedMessage: {
     message: "Éxito",
     description: "El usuario se guardó correctamente"
