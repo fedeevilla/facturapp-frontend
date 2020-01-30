@@ -26,7 +26,7 @@ const App = ({ token, userId, fetchProfile }) => {
 
   return (
     <Layout>
-      <Content>{token && userId ? <Router /> : <Login />}</Content>
+      <Content>{token ? <Router /> : <Login />}</Content>
     </Layout>
   );
 };

@@ -13,8 +13,6 @@ import {
 import { isLoading } from "../utils/actions";
 import Upload from "../components/Upload";
 
-const { MonthPicker } = DatePicker;
-
 const NewInvoice = ({
   form,
   visible,
@@ -95,10 +93,10 @@ const NewInvoice = ({
               }
             ]
           })(
-            <MonthPicker
-              placeholder="Seleccione un mes"
+            <DatePicker
+              placeholder="Seleccione un día"
               style={{ width: "100%" }}
-              format="MMMM [de] YYYY"
+              format="DD/MM/YYYY"
             />
           )}
         </Form.Item>

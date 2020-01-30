@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
 import * as R from "ramda";
-import { Table, Button, Popconfirm, Tag, Alert, Tooltip } from "antd";
+import { Table, Button, Popconfirm, Tooltip } from "antd";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import { isLoading } from "../utils/actions";
@@ -30,8 +30,7 @@ const WrapperButton = styled.div`
 
 const Footer = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-end;
 `;
 
 const InvoicesList = ({
@@ -53,21 +52,12 @@ const InvoicesList = ({
 
   const sortedinvoices = R.sort(R.descend(R.prop("date")), invoices);
 
-  const totalAmount = () => {
-    let total = 0;
-    const lastYear = R.take(12, sortedinvoices);
-    lastYear.forEach(({ amount, dollar }) => {
-      total += dollar === 0 ? amount : amount * dollar;
-    });
-    return total.toFixed(2);
-  };
-
   const columns = [
     {
       title: "Fecha",
       dataIndex: "date",
       key: "date",
-      render: date => moment(date).format("MMMM YYYY")
+      render: date => moment(date).format("DD/MM/YYYY")
     },
     {
       title: "Monto",
@@ -145,47 +135,25 @@ const InvoicesList = ({
   return (
     <Wrapper>
       <Table
-        style={{ width: "100%" }}
+        style={{ width: 800, margin: "auto" }}
         loading={loading}
         columns={columns}
         dataSource={sortedinvoices}
+        locale={{ emptyText: "Sin datos" }}
         rowKey="_id"
-        footer={() => {
-          const total = totalAmount();
-          return (
-            <Footer>
-              <div style={{ display: "flex" }}>
-                <Alert
-                  message={
-                    <b>
-                      <Tag color="green">${total}</Tag>
-                    </b>
-                  }
-                  type="info"
-                />
-                <Alert
-                  style={{ marginLeft: 10 }}
-                  message={
-                    <b>
-                      <Tag color="green">${(total / 12).toFixed(2)}/mes</Tag>
-                    </b>
-                  }
-                  type="info"
-                />
-              </div>
-
-              <Button
-                onClick={() => {
-                  setInvoice(null);
-                  setShowModalInvoice(true);
-                }}
-                type="primary"
-              >
-                Nueva factura
-              </Button>
-            </Footer>
-          );
-        }}
+        footer={() => (
+          <Footer>
+            <Button
+              onClick={() => {
+                setInvoice(null);
+                setShowModalInvoice(true);
+              }}
+              type="primary"
+            >
+              Nueva factura
+            </Button>
+          </Footer>
+        )}
       />
       {showModalInvoice && (
         <NewInvoice
