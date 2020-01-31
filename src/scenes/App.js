@@ -5,7 +5,9 @@ import styled from "styled-components";
 import Login from "../components/Auth/Login";
 import Layout from "../components/Layout/Layout";
 import Router from "./Router";
-import { fetchProfile } from "../store/actions/user";
+import { fetchProfile, FETCH_USER } from "../store/actions/user";
+import { isLoading } from "../utils/actions";
+import { Spin } from "antd";
 
 const Content = styled.div`
   justify-content: center;
@@ -17,12 +19,29 @@ const Content = styled.div`
   width: 100%;
 `;
 
-const App = ({ token, userId, fetchProfile }) => {
+const ContentSpinner = styled.div`
+  height: 100vh;
+  width: 100%;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const App = ({ token, userId, fetchProfile, fetching }) => {
   useEffect(() => {
     if (token && !userId) {
       fetchProfile();
     }
   }, [fetchProfile, token, userId]);
+
+  if (fetching) {
+    return (
+      <ContentSpinner>
+        <Spin />
+      </ContentSpinner>
+    );
+  }
 
   return (
     <Layout>
@@ -35,7 +54,8 @@ const enhancer = compose(
   connect(
     state => ({
       token: state.user.token,
-      userId: state.user._id
+      userId: state.user._id,
+      fetching: isLoading(FETCH_USER, state)
     }),
     { fetchProfile }
   )
