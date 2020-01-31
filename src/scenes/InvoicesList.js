@@ -95,7 +95,7 @@ const InvoicesList = ({
 
         return (
           <>
-            <Tooltip title="Editar factura">
+            <Tooltip title="Editar factura" placement="bottom">
               <Button
                 onClick={() => {
                   setInvoice(invoice);
@@ -113,7 +113,7 @@ const InvoicesList = ({
               okText="Eliminar"
               cancelText="Cancelar"
             >
-              <Tooltip title="Eliminar factura">
+              <Tooltip title="Eliminar factura" placement="bottom">
                 <Button
                   loading={deleting && idLoading === _id}
                   shape="circle"
@@ -123,7 +123,7 @@ const InvoicesList = ({
                 />
               </Tooltip>
             </Popconfirm>
-            <Tooltip title="Duplicar factura">
+            <Tooltip title="Duplicar factura" placement="bottom">
               <Button
                 onClick={async () => await duplicateInvoice(invoice)}
                 loading={duplicating && idLoading === _id}
