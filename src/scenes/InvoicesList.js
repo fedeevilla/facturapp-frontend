@@ -17,6 +17,7 @@ import {
 
 import { logout, LOGOUT } from "../store/actions/user";
 import NewInvoice from "./NewInvoice";
+import { PROVIDER } from "./selector";
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,26 +65,27 @@ const InvoicesList = ({
       render: date => moment(date).format("DD/MM/YYYY")
     },
     {
-      title: "Monto",
-      dataIndex: "amount",
-      key: "amount",
-      render: (amount, { dollar }) => {
-        return dollar === 0 ? `$ ${amount}` : `U$D ${amount}`;
+      title: "Proveedor",
+      dataIndex: "provider",
+      key: "provider",
+      render: provider => {
+        return PROVIDER[provider];
       }
     },
     {
-      title: "Cotización USD",
-      dataIndex: "dollar",
-      key: "dollar",
-      render: dollar => `U$D ${dollar}`
+      title: "Tipo Factura",
+      dataIndex: "type",
+      key: "type",
+      render: type => {
+        return `Factura ${type}`;
+      }
     },
     {
       title: "TOTAL",
       dataIndex: "total",
       key: "total",
-      render: (_, { dollar, amount }) => {
-        const total = dollar === 0 ? amount : amount * dollar;
-        return <b>$ {total.toFixed(2)}</b>;
+      render: (_, { amount }) => {
+        return <b>$ {amount.toFixed(2)}</b>;
       }
     },
     {

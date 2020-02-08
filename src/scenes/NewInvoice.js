@@ -3,7 +3,15 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 import moment from "moment";
 import * as R from "ramda";
-import { InputNumber, Modal, Form, Button, DatePicker, Popconfirm } from "antd";
+import {
+  InputNumber,
+  Modal,
+  Form,
+  Button,
+  DatePicker,
+  Popconfirm,
+  Select
+} from "antd";
 import {
   CREATE_INVOICE,
   UPDATE_INVOICE,
@@ -12,7 +20,9 @@ import {
 } from "../store/actions/invoices";
 import { isLoading } from "../utils/actions";
 import Upload from "../components/Upload";
+import { PROVIDER } from "./selector";
 
+const { Option } = Select;
 const NewInvoice = ({
   form,
   visible,
@@ -100,6 +110,18 @@ const NewInvoice = ({
             />
           )}
         </Form.Item>
+        <Form.Item label="Proveedor:" name="provider">
+          {getFieldDecorator("provider", {
+            initialValue: "C"
+          })(
+            <Select>
+              <Option value="A">{PROVIDER["A"]}</Option>
+              <Option value="B">{PROVIDER["B"]}</Option>
+              <Option value="C">{PROVIDER["C"]}</Option>
+              <Option value="E">{PROVIDER["E"]}</Option>
+            </Select>
+          )}
+        </Form.Item>
         <Form.Item label="Monto:" name="amount">
           {getFieldDecorator("amount", {
             rules: [
@@ -116,9 +138,16 @@ const NewInvoice = ({
             />
           )}
         </Form.Item>
-        <Form.Item label="Dólar:" name="dollar">
-          {getFieldDecorator("dollar")(
-            <InputNumber min={0} placeholder="20" style={{ width: "100%" }} />
+        <Form.Item label="Tipo de Factura:" name="type">
+          {getFieldDecorator("type", {
+            initialValue: "C"
+          })(
+            <Select>
+              <Option value="A">Factura A</Option>
+              <Option value="B">Factura B</Option>
+              <Option value="C">Factura C</Option>
+              <Option value="E">Factura E</Option>
+            </Select>
           )}
         </Form.Item>
         <Form.Item label="PDF:" name="pdf" style={{ display: "flex" }}>
