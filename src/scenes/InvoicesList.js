@@ -151,6 +151,7 @@ const InvoicesList = ({
 
   return (
     <Wrapper>
+      <ReportInvoices invoices={invoices} />
       <Table
         style={{ width: 800, margin: "auto" }}
         loading={loading}
@@ -179,7 +180,7 @@ const InvoicesList = ({
           setShowModalInvoice={setShowModalInvoice}
         />
       )}
-      <ReportInvoices invoices={invoices} />
+
       <WrapperButton>
         <Button type="danger" disabled={loggingout} onClick={() => logout()}>
           Cerrar Sesión

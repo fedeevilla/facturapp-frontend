@@ -15,7 +15,6 @@ const Content = styled.div`
   padding: 30px;
   border-radius: 4px;
   margin: 0 auto;
-  margin-top: 50px;
   width: 100%;
 `;
 

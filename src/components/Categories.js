@@ -3,6 +3,7 @@ import styled from "styled-components";
 import categories from "../assets/categories.png";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
