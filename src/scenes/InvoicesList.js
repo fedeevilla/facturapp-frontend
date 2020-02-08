@@ -18,6 +18,7 @@ import {
 import { logout, LOGOUT } from "../store/actions/user";
 import NewInvoice from "./NewInvoice";
 import { PROVIDER } from "./selector";
+import ReportInvoices from "../components/Invoice/ReportInvoices";
 
 const Wrapper = styled.div`
   display: flex;
@@ -178,6 +179,7 @@ const InvoicesList = ({
           setShowModalInvoice={setShowModalInvoice}
         />
       )}
+      <ReportInvoices invoices={invoices} />
       <WrapperButton>
         <Button type="danger" disabled={loggingout} onClick={() => logout()}>
           Cerrar Sesión
