@@ -44,7 +44,7 @@ const InvoicesList = ({
   const [invoice, setInvoice] = useState(null);
 
   useEffect(() => {
-    R.isNil(invoices) && fetchiInvoices();
+    !invoices && fetchiInvoices();
   }, [fetchiInvoices, invoices]);
 
   const sortedInvoices = R.sort(R.descend(R.prop("date")), invoices || []);
