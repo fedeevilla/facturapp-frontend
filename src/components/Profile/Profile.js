@@ -1,13 +1,18 @@
 import React from "react";
+import { Row, Col } from "antd";
 import PersonalInformation from "./PersonalInformation";
 import ChangePassword from "./ChangePassword";
 
 const Profile = () => {
   return (
-    <>
-      <PersonalInformation />
-      <ChangePassword />
-    </>
+    <Row>
+      <Col xs={24} md={12}>
+        <PersonalInformation />
+      </Col>
+      <Col xs={24} md={12}>
+        <ChangePassword />
+      </Col>
+    </Row>
   );
 };
 

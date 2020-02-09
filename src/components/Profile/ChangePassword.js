@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { compose } from "recompose";
 import * as R from "ramda";
 import { connect } from "react-redux";
-import { Button, Form, Input, Row, Col } from "antd";
+import { Button, Form, Input, Row } from "antd";
 import { changePassword, CHANGE_PASSWORD } from "../../store/actions/user";
 import { isLoading } from "../../utils/actions";
 
@@ -11,7 +11,7 @@ const Container = styled.div`
   background: whitesmoke;
   padding: 30px;
   border-radius: 15px;
-  margin-bottom: 25px;
+  margin: 20px;
 `;
 
 const ChangePassword = ({ form, changePassword, loading }) => {
@@ -43,55 +43,50 @@ const ChangePassword = ({ form, changePassword, loading }) => {
     <Form layout="horizontal">
       <Container>
         <h2>Seguridad</h2>
-        <Row gutter={16}>
-          <Col xs={24} md={12}>
-            <Form.Item label="Contraseña actual" hasFeedback>
-              {getFieldDecorator("oldPassword", {
-                rules: [
-                  {
-                    required: true,
-                    message: "Por favor ingrese su contraseña"
-                  },
-                  {
-                    min: 6,
-                    message: "Debe tener al menos 6 caracteres"
-                  }
-                ]
-              })(<Input.Password />)}
-            </Form.Item>
-            <Form.Item label="Nueva contraseña" hasFeedback>
-              {getFieldDecorator("newPassword", {
-                rules: [
-                  {
-                    required: true,
-                    message: "Por favor ingrese su nueva contraseña"
-                  },
-                  {
-                    min: 6,
-                    message: "Debe tener al menos 6 caracteres"
-                  },
-                  {
-                    validator: validateToNextPassword
-                  }
-                ]
-              })(<Input.Password onBlur={handleConfirmBlur} />)}
-            </Form.Item>
-            <Form.Item label="Confirmar contraseña" hasFeedback>
-              {getFieldDecorator("confirm", {
-                rules: [
-                  {
-                    required: true,
-                    message: "Por favor confirme su contraseña"
-                  },
-                  {
-                    validator: compareToFirstPassword
-                  }
-                ]
-              })(<Input.Password onBlur={handleConfirmBlur} />)}
-            </Form.Item>
-          </Col>
-        </Row>
-
+        <Form.Item label="Contraseña actual" hasFeedback>
+          {getFieldDecorator("oldPassword", {
+            rules: [
+              {
+                required: true,
+                message: "Por favor ingrese su contraseña"
+              },
+              {
+                min: 6,
+                message: "Debe tener al menos 6 caracteres"
+              }
+            ]
+          })(<Input.Password />)}
+        </Form.Item>
+        <Form.Item label="Nueva contraseña" hasFeedback>
+          {getFieldDecorator("newPassword", {
+            rules: [
+              {
+                required: true,
+                message: "Por favor ingrese su nueva contraseña"
+              },
+              {
+                min: 6,
+                message: "Debe tener al menos 6 caracteres"
+              },
+              {
+                validator: validateToNextPassword
+              }
+            ]
+          })(<Input.Password onBlur={handleConfirmBlur} />)}
+        </Form.Item>
+        <Form.Item label="Confirmar contraseña" hasFeedback>
+          {getFieldDecorator("confirm", {
+            rules: [
+              {
+                required: true,
+                message: "Por favor confirme su contraseña"
+              },
+              {
+                validator: compareToFirstPassword
+              }
+            ]
+          })(<Input.Password onBlur={handleConfirmBlur} />)}
+        </Form.Item>
         <Row type="flex" justify="start">
           <Form.Item>
             <Button
