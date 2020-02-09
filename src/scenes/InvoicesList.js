@@ -53,10 +53,10 @@ const InvoicesList = ({
   const [invoice, setInvoice] = useState(null);
 
   useEffect(() => {
-    fetchiInvoices();
-  }, [fetchiInvoices]);
+    R.isNil(invoices) && fetchiInvoices();
+  }, [fetchiInvoices, invoices]);
 
-  const sortedinvoices = R.sort(R.descend(R.prop("date")), invoices);
+  const sortedInvoices = R.sort(R.descend(R.prop("date")), invoices || []);
 
   const columns = [
     {
@@ -94,7 +94,7 @@ const InvoicesList = ({
       dataIndex: "_id",
       key: "action",
       render: _id => {
-        const invoice = R.find(R.propEq("_id", _id), invoices);
+        const invoice = R.find(R.propEq("_id", _id), sortedInvoices);
 
         return (
           <>
@@ -151,12 +151,12 @@ const InvoicesList = ({
 
   return (
     <Wrapper>
-      <ReportInvoices invoices={invoices} />
+      <ReportInvoices invoices={sortedInvoices} />
       <Table
         style={{ width: 800, margin: "auto" }}
         loading={loading}
         columns={columns}
-        dataSource={sortedinvoices}
+        dataSource={sortedInvoices}
         locale={{ emptyText: "Sin datos" }}
         rowKey="_id"
         footer={() => (

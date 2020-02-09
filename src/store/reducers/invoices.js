@@ -8,7 +8,7 @@ import {
 import * as R from "ramda";
 
 const initialState = {
-  list: [],
+  list: null,
   idLoading: null
 };
 
