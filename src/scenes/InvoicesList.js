@@ -15,7 +15,6 @@ import {
   DUPLICATE_INVOICE
 } from "../store/actions/invoices";
 
-import { logout, LOGOUT } from "../store/actions/user";
 import NewInvoice from "./NewInvoice";
 import { PROVIDER } from "./selector";
 import ReportInvoices from "../components/Invoice/ReportInvoices";
@@ -24,12 +23,6 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-`;
-
-const WrapperButton = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 25px;
 `;
 
 const Footer = styled.div`
@@ -43,8 +36,6 @@ const InvoicesList = ({
   loading,
   deleteInvoice,
   deleting,
-  logout,
-  loggingout,
   idLoading,
   duplicateInvoice,
   duplicating
@@ -180,12 +171,6 @@ const InvoicesList = ({
           setShowModalInvoice={setShowModalInvoice}
         />
       )}
-
-      <WrapperButton>
-        <Button type="danger" disabled={loggingout} onClick={() => logout()}>
-          Cerrar Sesión
-        </Button>
-      </WrapperButton>
     </Wrapper>
   );
 };
@@ -197,14 +182,12 @@ const enhancer = compose(
       loading: isLoading(FETCH_INVOICES, state),
       deleting: isLoading(DELETE_INVOICE, state),
       duplicating: isLoading(DUPLICATE_INVOICE, state),
-      loggingout: isLoading(LOGOUT, state),
       idLoading: state.invoices.idLoading
     }),
     {
       fetchiInvoices,
       deleteInvoice,
-      duplicateInvoice,
-      logout
+      duplicateInvoice
     }
   )
 );

@@ -29,7 +29,7 @@ const ReportInvoices = ({ invoices }) => {
         </h3>
       </span>
       <span style={{ margin: "auto 0" }}>
-        <Link to="/categories">Ver Categorias</Link>
+        <Link to="/categories">Ver Categorías</Link>
       </span>
     </Container>
   );
