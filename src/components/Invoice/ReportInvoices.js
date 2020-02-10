@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { lastYeartAmount, thisMonthAmount, lastMonthAmount } from "./selector";
+import {
+  lastYeartAmount,
+  thisMonthAmount,
+  lastMonthAmount,
+  lastYearAmount
+} from "./selector";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
@@ -13,6 +18,12 @@ const Container = styled.div`
   padding: 30px;
   border-radius: 15px;
   margin-bottom: 25px;
+
+  h3 {
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 `;
 
 const Amount = styled.span`
@@ -46,6 +57,10 @@ const ReportInvoices = ({ invoices }) => {
               .format("MMM YYYY")}): `}
           </b>
           <Amount>${lastMonthAmount(invoices)}</Amount>
+        </h3>
+        <h3>
+          <b>{`Facturación parcial anual (${moment().format("YYYY")}): `}</b>
+          <Amount>${lastYearAmount(invoices)}</Amount>
         </h3>
       </span>
       <span style={{ margin: "auto 0" }}>

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { compose } from "recompose";
 import { connect } from "react-redux";
-import { Button, Form, Input, Icon, Row, Col, Avatar } from "antd";
+import { Button, Form, Input, Icon, Row, Avatar } from "antd";
 import { getOptimizedImage } from "../../utils/images";
 import Upload from "../Upload";
 import { updateUser, UPDATE_USER } from "../../store/actions/user";

@@ -58,3 +58,15 @@ export const lastMonthAmount = invoices => {
 
   return suma;
 };
+
+export const lastYearAmount = invoices => {
+  const year = new Date().getFullYear().toString();
+  let suma = 0;
+
+  invoices.map(i => {
+    if (year === moment(i.date).format("YYYY")) {
+      suma += i.amount;
+    }
+  });
+  return suma;
+};
