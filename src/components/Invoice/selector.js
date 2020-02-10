@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 import moment from "moment";
 import * as R from "ramda";
 
@@ -27,8 +28,7 @@ export const lastYeartAmount = invoices => {
   let suma = 0;
   for (let i = 0; i < 12; i++) {
     !R.isNil(groupping[lastMonths[i]]) &&
-      // eslint-disable-next-line no-loop-func
-      groupping[lastMonths[i]].map(i => (suma += i.amount));
+      R.forEach(i => (suma += i.amount), groupping[lastMonths[i]]);
   }
 
   return suma;
@@ -42,7 +42,7 @@ export const thisMonthAmount = invoices => {
     date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2);
   let suma = 0;
   !R.isNil(groupping[thisMonth]) &&
-    groupping[thisMonth].map(i => (suma += i.amount));
+    R.forEach(i => (suma += i.amount), groupping[thisMonth]);
 
   return suma;
 };
@@ -54,7 +54,7 @@ export const lastMonthAmount = invoices => {
   const thisMonth = date.getFullYear() + ("0" + date.getMonth()).slice(-2);
   let suma = 0;
   !R.isNil(groupping[thisMonth]) &&
-    groupping[thisMonth].map(i => (suma += i.amount));
+    R.forEach(i => (suma += i.amount), groupping[thisMonth]);
 
   return suma;
 };
@@ -63,10 +63,10 @@ export const lastYearAmount = invoices => {
   const year = new Date().getFullYear().toString();
   let suma = 0;
 
-  invoices.map(i => {
+  R.forEach(i => {
     if (year === moment(i.date).format("YYYY")) {
       suma += i.amount;
     }
-  });
+  }, invoices);
   return suma;
 };
