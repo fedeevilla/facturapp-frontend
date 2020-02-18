@@ -124,7 +124,7 @@ const Layout = ({ children, user }) => {
         )}
       </Header>
       <ContainerContext.Provider value={containerRef}>
-        <Content innerRef={containerRef}>{children}</Content>
+        <Content ref={containerRef}>{children}</Content>
       </ContainerContext.Provider>
     </Container>
   );
