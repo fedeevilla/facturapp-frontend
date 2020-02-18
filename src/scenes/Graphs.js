@@ -28,14 +28,15 @@ const Graphs = ({ invoices, loading, fetchiInvoices }) => {
         <Button type="primary">Volver</Button>
       </Link>
       {invoices && (
-        <div style={{ marginTop: 25 }}>
-          <b>
-            {`Facturación interanual (${moment()
+        <div>
+          <LineChart
+            title={`Facturación interanual (${moment()
               .subtract(11, "months")
               .format("MMM YYYY")}
             - ${moment().format("MMM YYYY")}): `}
-          </b>
-          <LineChart invoices={amountPerMonth(invoices)} labels={months()} />
+            invoices={amountPerMonth(invoices)}
+            labels={months()}
+          />
         </div>
       )}
     </Wrapper>

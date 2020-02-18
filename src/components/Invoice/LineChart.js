@@ -1,7 +1,7 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 
-const LineChart = ({ invoices, labels }) => {
+const LineChart = ({ title, invoices, labels }) => {
   const data = {
     labels,
     datasets: [
@@ -28,7 +28,12 @@ const LineChart = ({ invoices, labels }) => {
       }
     ]
   };
-  return <Line data={data} />;
+  return (
+    <div style={{ marginTop: 30 }}>
+      <b>{title}</b>
+      <Line data={data} />
+    </div>
+  );
 };
 
 export default LineChart;
