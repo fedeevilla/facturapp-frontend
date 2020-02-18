@@ -1,18 +1,9 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
-import { amountPerMonth, months } from "./selector";
-import styled from "styled-components";
-import moment from "moment";
 
-const Wrapper = styled.div`
-  width: 90%;
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-const LineChart = ({ invoices }) => {
+const LineChart = ({ invoices, labels }) => {
   const data = {
-    labels: months(),
+    labels,
     datasets: [
       {
         label: "Facturación",
@@ -33,21 +24,11 @@ const LineChart = ({ invoices }) => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: amountPerMonth(invoices)
+        data: invoices
       }
     ]
   };
-  return (
-    <Wrapper>
-      <b>
-        {`Facturación interanual (${moment()
-          .subtract(11, "months")
-          .format("MMM YYYY")}
-            - ${moment().format("MMM YYYY")}): `}
-      </b>
-      <Line data={data} />
-    </Wrapper>
-  );
+  return <Line data={data} />;
 };
 
 export default LineChart;
