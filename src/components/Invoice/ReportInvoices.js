@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import {
-  lastYeartAmount,
+  lastYearAmount,
   thisMonthAmount,
   lastMonthAmount,
-  lastYearAmount
+  lastYearPartialAmount
 } from "./selector";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -42,7 +42,7 @@ const ReportInvoices = ({ invoices }) => {
               .format("MMM YYYY")}
             - ${moment().format("MMM YYYY")}): `}
           </b>
-          <Amount>${lastYeartAmount(invoices)}</Amount>
+          <Amount>${lastYearAmount(invoices)}</Amount>
         </h3>
         <h3>
           <b>{`Facturación del mes actual (${moment().format(
@@ -60,12 +60,17 @@ const ReportInvoices = ({ invoices }) => {
         </h3>
         <h3>
           <b>{`Facturación parcial anual (${moment().format("YYYY")}): `}</b>
-          <Amount>${lastYearAmount(invoices)}</Amount>
+          <Amount>${lastYearPartialAmount(invoices)}</Amount>
         </h3>
       </span>
-      <span style={{ margin: "auto 0" }}>
-        <Link to="/categories">Ver Categorías</Link>
-      </span>
+      <div style={{ display: "grid", margin: "auto 0" }}>
+        <Link style={{ margin: "0 auto" }} to="/categories">
+          Ver Categorías
+        </Link>
+        <Link style={{ margin: "0 auto" }} to="/graphs">
+          Ver Gráficos
+        </Link>
+      </div>
     </Container>
   );
 };
