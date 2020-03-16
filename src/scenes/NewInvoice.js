@@ -107,6 +107,7 @@ const NewInvoice = ({
               placeholder="Seleccione un día"
               style={{ width: "100%" }}
               format="DD/MM/YYYY"
+              disabledDate={calendarDate => calendarDate.valueOf() > Date.now()}
             />
           )}
         </Form.Item>
