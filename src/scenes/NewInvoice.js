@@ -10,13 +10,13 @@ import {
   Button,
   DatePicker,
   Popconfirm,
-  Select
+  Select,
 } from "antd";
 import {
   CREATE_INVOICE,
   UPDATE_INVOICE,
   createInvoice,
-  updateInvoice
+  updateInvoice,
 } from "../store/actions/invoices";
 import { isLoading } from "../utils/actions";
 import Upload from "../components/Upload";
@@ -30,14 +30,14 @@ const NewInvoice = ({
   loading,
   createInvoice,
   invoice,
-  updateInvoice
+  updateInvoice,
 }) => {
   const { getFieldDecorator, setFieldsValue, getFieldValue } = form;
 
   useEffect(() => {
     if (invoice) {
       setFieldsValue({
-        ...R.assoc("date", moment(invoice.date), invoice)
+        ...R.assoc("date", moment(invoice.date), invoice),
       });
     }
   }, [invoice, setFieldsValue]);
@@ -66,22 +66,22 @@ const NewInvoice = ({
           icon="save"
           type="primary"
           loading={loading}
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault();
             form.validateFields(async (err, values) => {
               if (!err) {
                 if (!invoice) {
                   await createInvoice({
                     ...values,
-                    date: new Date(values.date).getTime()
+                    date: new Date(values.date).getTime(),
                   });
                 } else {
                   await updateInvoice({
                     idInvoice: invoice._id,
                     formData: {
                       ...values,
-                      date: new Date(values.date).getTime()
-                    }
+                      date: new Date(values.date).getTime(),
+                    },
                   });
                 }
                 setShowModalInvoice(false);
@@ -90,30 +90,33 @@ const NewInvoice = ({
           }}
         >
           Guardar
-        </Button>
+        </Button>,
       ]}
     >
       <Form layout="horizontal">
         <Form.Item label="Fecha:" name="date">
           {getFieldDecorator("date", {
+            initialValue: moment(Date.now()),
             rules: [
               {
                 required: true,
-                message: "Debe completar este campo"
-              }
-            ]
+                message: "Debe completar este campo",
+              },
+            ],
           })(
             <DatePicker
               placeholder="Seleccione un día"
               style={{ width: "100%" }}
               format="DD/MM/YYYY"
-              disabledDate={calendarDate => calendarDate.valueOf() > Date.now()}
+              disabledDate={(calendarDate) =>
+                calendarDate.valueOf() > Date.now()
+              }
             />
           )}
         </Form.Item>
         <Form.Item label="Proveedor:" name="provider">
           {getFieldDecorator("provider", {
-            initialValue: "C"
+            initialValue: "C",
           })(
             <Select>
               <Option value="A">{PROVIDER["A"]}</Option>
@@ -128,9 +131,9 @@ const NewInvoice = ({
             rules: [
               {
                 required: true,
-                message: "Debe completar este campo"
-              }
-            ]
+                message: "Debe completar este campo",
+              },
+            ],
           })(
             <InputNumber
               min={0}
@@ -141,7 +144,7 @@ const NewInvoice = ({
         </Form.Item>
         <Form.Item label="Tipo de Factura:" name="type">
           {getFieldDecorator("type", {
-            initialValue: "C"
+            initialValue: "C",
           })(
             <Select>
               <Option value="A">Factura A</Option>
@@ -159,7 +162,7 @@ const NewInvoice = ({
                   label={"Seleccionar PDF"}
                   options={{ upload_preset: "invoices" }}
                   action={process.env.REACT_APP_CLOUDINARY_URI}
-                  onChange={pdf => {
+                  onChange={(pdf) => {
                     setFieldsValue({ pdf });
                   }}
                 />
@@ -205,9 +208,9 @@ const NewInvoice = ({
 const enhancer = compose(
   Form.create(),
   connect(
-    state => ({
+    (state) => ({
       loading:
-        isLoading(CREATE_INVOICE, state) || isLoading(UPDATE_INVOICE, state)
+        isLoading(CREATE_INVOICE, state) || isLoading(UPDATE_INVOICE, state),
     }),
     { createInvoice, updateInvoice }
   )

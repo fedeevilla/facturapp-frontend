@@ -1,10 +1,10 @@
 import React from "react";
-import styled from "styled-components";
+import styled from "styled-components/macro";
 import {
   lastYearAmount,
   thisMonthAmount,
   lastMonthAmount,
-  lastYearPartialAmount
+  lastYearPartialAmount,
 } from "./selector";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -12,7 +12,8 @@ import moment from "moment";
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 800px;
+  width: 100%;
+  max-width: 800px;
   margin: auto;
   background: whitesmoke;
   padding: 30px;
@@ -23,6 +24,21 @@ const Container = styled.div`
     &:last-child {
       margin-bottom: 0;
     }
+  }
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+  }
+`;
+
+const Links = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+
+  @media (max-width: 640px) {
+    margin-top: 10px;
   }
 `;
 
@@ -63,14 +79,14 @@ const ReportInvoices = ({ invoices }) => {
           <Amount>${lastYearPartialAmount(invoices)}</Amount>
         </h3>
       </span>
-      <div style={{ display: "grid", margin: "auto 0" }}>
+      <Links>
         <Link style={{ margin: "0 auto" }} to="/categories">
           Ver Categorías
         </Link>
         <Link style={{ margin: "0 auto" }} to="/graphs">
           Ver Gráficos
         </Link>
-      </div>
+      </Links>
     </Container>
   );
 };

@@ -12,12 +12,15 @@ import {
   deleteInvoice,
   DELETE_INVOICE,
   duplicateInvoice,
-  DUPLICATE_INVOICE
+  DUPLICATE_INVOICE,
 } from "../store/actions/invoices";
 
 import NewInvoice from "./NewInvoice";
 import { PROVIDER } from "./selector";
 import ReportInvoices from "../components/Invoice/ReportInvoices";
+import useWindowDimensions from "../hooks/useWindowDimensions";
+
+const WIDTH_BREAKPOINT = 800;
 
 const Wrapper = styled.div`
   display: flex;
@@ -38,8 +41,9 @@ const InvoicesList = ({
   deleting,
   idLoading,
   duplicateInvoice,
-  duplicating
+  duplicating,
 }) => {
+  const { width } = useWindowDimensions();
   const [showModalInvoice, setShowModalInvoice] = useState(false);
   const [invoice, setInvoice] = useState(null);
 
@@ -54,23 +58,23 @@ const InvoicesList = ({
       title: "Fecha",
       dataIndex: "date",
       key: "date",
-      render: date => moment(date).format("DD/MM/YYYY")
+      render: (date) => moment(date).format("DD/MM/YYYY"),
     },
     {
       title: "Proveedor",
       dataIndex: "provider",
       key: "provider",
-      render: provider => {
+      render: (provider) => {
         return PROVIDER[provider];
-      }
+      },
     },
     {
       title: "Tipo Factura",
       dataIndex: "type",
       key: "type",
-      render: type => {
+      render: (type) => {
         return `Factura ${type}`;
-      }
+      },
     },
     {
       title: "TOTAL",
@@ -78,29 +82,31 @@ const InvoicesList = ({
       key: "total",
       render: (_, { amount }) => {
         return <b>$ {amount.toFixed(2)}</b>;
-      }
+      },
     },
     {
       title: "Acción",
       dataIndex: "_id",
       key: "action",
-      render: _id => {
+      render: (_id) => {
         const invoice = R.find(R.propEq("_id", _id), sortedInvoices);
 
         return (
           <>
-            <Tooltip title="Editar factura" placement="bottom">
-              <Button
-                onClick={() => {
-                  setInvoice(invoice);
-                  setShowModalInvoice(true);
-                }}
-                shape="circle"
-                icon="edit"
-                type="primary"
-                style={{ marginRight: 20 }}
-              />
-            </Tooltip>
+            {width > WIDTH_BREAKPOINT && (
+              <Tooltip title="Editar factura" placement="bottom">
+                <Button
+                  onClick={() => {
+                    setInvoice(invoice);
+                    setShowModalInvoice(true);
+                  }}
+                  shape="circle"
+                  icon="edit"
+                  type="primary"
+                  style={{ marginRight: 20 }}
+                />
+              </Tooltip>
+            )}
             <Popconfirm
               title="¿Estás seguro?"
               onConfirm={() => deleteInvoice(_id)}
@@ -117,17 +123,19 @@ const InvoicesList = ({
                 />
               </Tooltip>
             </Popconfirm>
-            <Tooltip title="Duplicar factura" placement="bottom">
-              <Button
-                onClick={async () => await duplicateInvoice(invoice)}
-                loading={duplicating && idLoading === _id}
-                shape="circle"
-                icon="plus"
-                type="dashed"
-                style={{ marginRight: 20 }}
-              />
-            </Tooltip>
-            {invoice.pdf && (
+            {width > WIDTH_BREAKPOINT && (
+              <Tooltip title="Duplicar factura" placement="bottom">
+                <Button
+                  onClick={async () => await duplicateInvoice(invoice)}
+                  loading={duplicating && idLoading === _id}
+                  shape="circle"
+                  icon="plus"
+                  type="dashed"
+                  style={{ marginRight: 20 }}
+                />
+              </Tooltip>
+            )}
+            {width > WIDTH_BREAKPOINT && invoice.pdf && (
               <a target="_blank" rel="noopener noreferrer" href={invoice.pdf}>
                 <Tooltip title="Ver factura">
                   <Button shape="circle" icon="file" type="default" />
@@ -136,17 +144,21 @@ const InvoicesList = ({
             )}
           </>
         );
-      }
-    }
+      },
+    },
   ];
 
   return (
     <Wrapper>
       <ReportInvoices invoices={sortedInvoices} />
       <Table
-        style={{ width: 800, margin: "auto" }}
+        style={{ margin: "auto" }}
         loading={loading}
-        columns={columns}
+        columns={
+          width < WIDTH_BREAKPOINT
+            ? [columns[0], columns[3], columns[4]]
+            : columns
+        }
         dataSource={sortedInvoices}
         locale={{ emptyText: "Sin datos" }}
         rowKey="_id"
@@ -177,17 +189,17 @@ const InvoicesList = ({
 
 const enhancer = compose(
   connect(
-    state => ({
+    (state) => ({
       invoices: state.invoices.list,
       loading: isLoading(FETCH_INVOICES, state),
       deleting: isLoading(DELETE_INVOICE, state),
       duplicating: isLoading(DUPLICATE_INVOICE, state),
-      idLoading: state.invoices.idLoading
+      idLoading: state.invoices.idLoading,
     }),
     {
       fetchiInvoices,
       deleteInvoice,
-      duplicateInvoice
+      duplicateInvoice,
     }
   )
 );
