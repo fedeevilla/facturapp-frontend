@@ -12,24 +12,24 @@ export const CHANGE_PASSWORD = makeAction("user/CHANGE_PASSWORD");
 export const ACTIVATE_USER = makeAction("user/ACTIVATE_USER");
 export const RECOVERY_PASSWORD = makeAction("user/RECOVERY_PASSWORD");
 
-const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
 export const login = createApiThunk({
   action: LOGIN,
-  request: async formData => {
+  request: async (formData) => {
     const data = await api.user.login(formData);
     localStorage.setItem("token", data.token);
 
     return {
       token: data.token,
-      ...data.user
+      ...data.user,
     };
   },
   resolvedMessage: {
     message: "¡Bienvenido! 👋",
-    description: "Es un gusto verte nuevamente por acá"
+    description: "Es un gusto verte nuevamente por acá",
   },
-  rejectedMessage: error => {
+  rejectedMessage: (error) => {
     const status = R.path(["response", "status"], error);
 
     return {
@@ -37,22 +37,22 @@ export const login = createApiThunk({
       description:
         status === 422
           ? "No se pudo iniciar sesión. Usuario o contraseña incorrectos"
-          : "Error intentando iniciar sesión. Intente nuevamente más tarde"
+          : "Error intentando iniciar sesión. Intente nuevamente más tarde",
     };
-  }
+  },
 });
 
 export const signup = createApiThunk({
   action: SIGNUP,
-  request: async formData => await api.user.signup(formData),
+  request: async (formData) => await api.user.signup(formData),
   resolvedMessage: {
     message: "¡Cuenta creada! 💪",
-    description: "Te enviamos un email para activar tu cuenta"
+    description: "Te enviamos un email para activar tu cuenta",
   },
   rejectedMessage: {
     message: "Error",
-    description: "Hubo problemas con la creación del usuario."
-  }
+    description: "Hubo problemas con la creación del usuario.",
+  },
 });
 
 export const logout = createApiThunk({
@@ -61,7 +61,7 @@ export const logout = createApiThunk({
     await sleep(1000);
     localStorage.removeItem("token");
     window.location.replace("/");
-  }
+  },
 });
 
 export const fetchProfile = createApiThunk({
@@ -75,42 +75,42 @@ export const fetchProfile = createApiThunk({
 
     return {
       message: "Error",
-      description: "No se pudo cargar el usuario"
+      description: "No se pudo cargar el usuario",
     };
-  }
+  },
 });
 
 export const updateUser = createApiThunk({
   action: UPDATE_USER,
-  request: async formData => await api.user.update(formData),
+  request: async (formData) => await api.user.update(formData),
   resolvedMessage: {
     message: "Éxito",
-    description: "El usuario se guardó correctamente"
+    description: "El usuario se guardó correctamente",
   },
   rejectedMessage: {
     message: "Error",
-    description: "Hubo problemas con la modificación del usuario."
-  }
+    description: "Hubo problemas con la modificación del usuario.",
+  },
 });
 
 export const changePassword = createApiThunk({
   action: CHANGE_PASSWORD,
-  request: async formData => {
+  request: async (formData) => {
     await api.user.changePassword(formData);
   },
   resolvedMessage: {
     message: "Éxito",
-    description: "La contraseña se modificó correctamente"
+    description: "La contraseña se modificó correctamente",
   },
   rejectedMessage: {
     message: "Error",
-    description: "Hubo problemas con la modificación de la contraseña."
-  }
+    description: "Hubo problemas con la modificación de la contraseña.",
+  },
 });
 
 export const activateUser = createApiThunk({
   action: ACTIVATE_USER,
-  request: async token => {
+  request: async (token) => {
     const data = await api.user.activate(token);
     localStorage.setItem("token", token);
     setTimeout(() => {
@@ -121,12 +121,12 @@ export const activateUser = createApiThunk({
   },
   resolvedMessage: {
     message: "Éxito",
-    description: "Tu cuenta se activó correctamente"
+    description: "Tu cuenta se activó correctamente",
   },
   rejectedMessage: {
     message: "Error",
-    description: "Hubo problemas con la activación de la cuenta."
-  }
+    description: "Hubo problemas con la activación de la cuenta.",
+  },
 });
 
 export const recoveryPassword = createApiThunk({
@@ -140,26 +140,26 @@ export const recoveryPassword = createApiThunk({
     }, 2000);
     return {
       message: "Éxito",
-      description: "La contraseña se modificó correctamente"
+      description: "La contraseña se modificó correctamente",
     };
   },
   rejectedMessage: {
     message: "Error",
-    description: "Hubo problemas con la modificación de la contraseña."
-  }
+    description: "Hubo problemas con la modificación de la contraseña.",
+  },
 });
 
 export const sendEmailPassword = createApiThunk({
   action: RECOVERY_PASSWORD,
-  request: async formData => {
+  request: async (formData) => {
     await api.user.sendEmailPassword(formData);
   },
   resolvedMessage: {
     message: "Éxito",
-    description: "Se ha enviado un email para restaurar la contraseña"
+    description: "Se ha enviado un email para restaurar la contraseña",
   },
   rejectedMessage: {
     message: "Error",
-    description: "Hubo problemas con el envío del email."
-  }
+    description: "Hubo problemas con el envío del email.",
+  },
 });

@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { compose } from "recompose";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "antd";
 import { logout, LOGOUT } from "../../store/actions/user";
 import { isLoading } from "../../utils/actions";
@@ -18,11 +17,18 @@ const WrapperButton = styled.div`
   justify-content: center;
 `;
 
-const SignOut = ({ logout, loggingout }) => {
+const SignOut = () => {
+  const loading = useSelector((state) => isLoading(LOGOUT, state));
+  const dispatch = useDispatch();
+
   return (
     <Container>
       <WrapperButton>
-        <Button type="danger" disabled={loggingout} onClick={() => logout()}>
+        <Button
+          type="danger"
+          disabled={loading}
+          onClick={() => dispatch(logout())}
+        >
           Cerrar Sesión
         </Button>
       </WrapperButton>
@@ -30,13 +36,4 @@ const SignOut = ({ logout, loggingout }) => {
   );
 };
 
-const enhancer = compose(
-  connect(
-    state => ({
-      loggingout: isLoading(LOGOUT, state)
-    }),
-    { logout }
-  )
-);
-
-export default enhancer(SignOut);
+export default SignOut;
