@@ -7,6 +7,7 @@ import Router from "./Router";
 import { fetchProfile, FETCH_USER } from "../store/actions/user";
 import { isLoading } from "../utils/actions";
 import { Spin } from "antd";
+import { fetchInvoices, FETCH_INVOICES } from "../store/actions/invoices";
 
 const Content = styled.div`
   justify-content: center;
@@ -29,7 +30,11 @@ const ContentSpinner = styled.div`
 const App = () => {
   const token = useSelector(({ user }) => user.token);
   const userId = useSelector(({ user }) => user.userId);
+  const invoices = useSelector(({ invoices }) => invoices.list);
   const isFetching = useSelector((state) => isLoading(FETCH_USER, state));
+  const isFetchingInvoices = useSelector((state) =>
+    isLoading(FETCH_INVOICES, state)
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,7 +43,13 @@ const App = () => {
     }
   }, [dispatch, token, userId]);
 
-  if (isFetching) {
+  useEffect(() => {
+    if (!invoices) {
+      dispatch(fetchInvoices());
+    }
+  }, [dispatch, invoices]);
+
+  if (isFetching || isFetchingInvoices) {
     return (
       <ContentSpinner>
         <Spin />

@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { fetchiInvoices, FETCH_INVOICES } from "../store/actions/invoices";
+import React from "react";
+import { useSelector } from "react-redux";
 import LineChart from "../components/Invoice/LineChart";
-import { isLoading } from "../utils/actions";
-import { Spin, Button } from "antd";
+import { Button } from "antd";
 import moment from "moment";
 import { amountPerMonth, months } from "../components/Invoice/selector";
 import styled from "styled-components";
@@ -16,12 +14,9 @@ const Wrapper = styled.div`
   margin: 0 auto;
 `;
 
-const Graphs = ({ invoices, loading, fetchiInvoices }) => {
-  useEffect(() => {
-    !invoices && fetchiInvoices();
-  }, [fetchiInvoices, invoices]);
+const Graphs = () => {
+  const invoices = useSelector(({ invoices }) => invoices.list);
 
-  if (loading) return <Spin></Spin>;
   return (
     <Wrapper>
       <Link to="/invoices" style={{ margin: "auto" }}>
@@ -43,14 +38,4 @@ const Graphs = ({ invoices, loading, fetchiInvoices }) => {
   );
 };
 
-const enhancer = connect(
-  state => ({
-    invoices: state.invoices.list,
-    loading: isLoading(FETCH_INVOICES, state)
-  }),
-  {
-    fetchiInvoices
-  }
-);
-
-export default enhancer(Graphs);
+export default Graphs;
