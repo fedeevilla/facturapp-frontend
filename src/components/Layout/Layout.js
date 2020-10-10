@@ -1,12 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { compose } from "recompose";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { Layout as AntdLayout, Avatar } from "antd";
-import { NavLink, withRouter } from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
 import ContainerContext from "./ConteinerContext";
 import { getOptimizedAvatar } from "../../utils/images";
+
 const { Header } = AntdLayout;
 
 const Container = styled.div`
@@ -99,7 +98,8 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
-const Layout = ({ children, user }) => {
+const Layout = ({ children }) => {
+  const user = useSelector(({ user }) => user);
   const containerRef = React.useRef(null);
 
   return (
@@ -130,11 +130,4 @@ const Layout = ({ children, user }) => {
   );
 };
 
-const enhancer = compose(
-  withRouter,
-  connect(state => ({
-    user: state.user
-  }))
-);
-
-export default enhancer(Layout);
+export default Layout;
