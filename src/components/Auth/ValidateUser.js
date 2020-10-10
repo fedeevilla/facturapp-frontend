@@ -1,11 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
 import * as R from "ramda";
-import { compose } from "recompose";
 import { Button } from "antd";
 import { isLoading } from "../../utils/actions";
 import { activateUser, ACTIVATE_USER } from "../../store/actions/user";
+import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div`
   display: grid;
@@ -18,7 +17,10 @@ const Container = styled.div`
   border-radius: 15px;
 `;
 
-const ValidateUser = ({ pathname, activateUser, loading }) => {
+const ValidateUser = ({ pathname }) => {
+  const loading = useSelector((state) => isLoading(ACTIVATE_USER, state));
+  const dispatch = useDispatch();
+
   const token = R.split("/validate/", pathname)[1];
   return (
     <Container>
@@ -27,7 +29,7 @@ const ValidateUser = ({ pathname, activateUser, loading }) => {
         loading={loading}
         type="primary"
         onClick={async () => {
-          await activateUser(token);
+          await dispatch(activateUser(token));
           window.location.replace("/");
         }}
       >
@@ -37,13 +39,4 @@ const ValidateUser = ({ pathname, activateUser, loading }) => {
   );
 };
 
-const enhancer = compose(
-  connect(
-    state => ({
-      loading: isLoading(ACTIVATE_USER, state)
-    }),
-    { activateUser }
-  )
-);
-
-export default enhancer(ValidateUser);
+export default ValidateUser;
