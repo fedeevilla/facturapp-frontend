@@ -1,18 +1,14 @@
 import React from "react";
 import * as R from "ramda";
 import { Input, Modal, Form, Button, Icon } from "antd";
-import { connect } from "react-redux";
-import { compose } from "recompose";
+import { useDispatch, useSelector } from "react-redux";
 import { sendEmailPassword, RECOVERY_PASSWORD } from "../../store/actions/user";
 import { isLoading } from "../../utils/actions";
 
-const ForgotPassword = ({
-  form,
-  visible,
-  setForgot,
-  sendEmailPassword,
-  loading
-}) => {
+const ForgotPassword = ({ form, visible, setForgot }) => {
+  const loading = useSelector((state) => isLoading(RECOVERY_PASSWORD, state));
+  const dispatch = useDispatch();
+
   const { getFieldDecorator } = form;
 
   return (
@@ -36,18 +32,18 @@ const ForgotPassword = ({
           icon="mail"
           loading={loading}
           type="primary"
-          onClick={ev => {
+          onClick={(ev) => {
             ev.preventDefault();
             form.validateFields(async (err, values) => {
               if (!err) {
-                await sendEmailPassword(R.dissoc("confirm", values));
+                await dispatch(sendEmailPassword(R.dissoc("confirm", values)));
                 setForgot(false);
               }
             });
           }}
         >
           Enviar
-        </Button>
+        </Button>,
       ]}
     >
       <Form layout="horizontal">
@@ -56,13 +52,13 @@ const ForgotPassword = ({
             rules: [
               {
                 type: "email",
-                message: "Debe ingresar un email válido"
+                message: "Debe ingresar un email válido",
               },
               {
                 required: true,
-                message: "Este campo no puede estar vacío"
-              }
-            ]
+                message: "Este campo no puede estar vacío",
+              },
+            ],
           })(
             <Input
               prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
@@ -76,14 +72,4 @@ const ForgotPassword = ({
   );
 };
 
-const enhancer = compose(
-  Form.create(),
-  connect(
-    state => ({
-      loading: isLoading(RECOVERY_PASSWORD, state)
-    }),
-    { sendEmailPassword }
-  )
-);
-
-export default enhancer(ForgotPassword);
+export default Form.create()(ForgotPassword);

@@ -44,10 +44,10 @@ const App = () => {
   }, [dispatch, token, userId]);
 
   useEffect(() => {
-    if (!invoices) {
+    if (token && !invoices) {
       dispatch(fetchInvoices());
     }
-  }, [dispatch, invoices]);
+  }, [dispatch, invoices, token]);
 
   if (isFetching || isFetchingInvoices) {
     return (
