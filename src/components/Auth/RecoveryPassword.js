@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as R from "ramda";
-import { compose } from "recompose";
 import { Button, Form, Row, Input } from "antd";
 import { isLoading } from "../../utils/actions";
 import { recoveryPassword, RECOVERY_PASSWORD } from "../../store/actions/user";
@@ -17,51 +16,63 @@ const Container = styled.div`
   border-radius: 15px;
 `;
 
-const RecoveryPassword = ({ pathname, form, loading, recoveryPassword }) => {
+const RecoveryPassword = ({ pathname, form }) => {
   const { getFieldDecorator } = form;
+
+  const loading = useSelector((state) => isLoading(RECOVERY_PASSWORD, state));
+  const dispatch = useDispatch();
+
   const token = R.split("/recovery/", pathname)[1];
   const [confirmDirty, setConfirmDirty] = useState(false);
 
-  const handleConfirmBlur = e => {
-    const { value } = e.target;
-    setConfirmDirty({ confirmDirty: confirmDirty || !!value });
-  };
+  const handleConfirmBlur = useCallback(
+    (e) => {
+      const { value } = e.target;
+      setConfirmDirty({ confirmDirty: confirmDirty || !!value });
+    },
+    [confirmDirty]
+  );
 
-  const compareToFirstPassword = (rule, value, callback) => {
-    if (value && value !== form.getFieldValue("password")) {
-      callback("Las contraseñas no coinciden");
-    } else {
+  const compareToFirstPassword = useCallback(
+    (rule, value, callback) => {
+      if (value && value !== form.getFieldValue("password")) {
+        callback("Las contraseñas no coinciden");
+      } else {
+        callback();
+      }
+    },
+    [form]
+  );
+
+  const validateToNextPassword = useCallback(
+    (rule, value, callback) => {
+      if (value && confirmDirty) {
+        form.validateFields(["confirm"], { force: true });
+      }
       callback();
-    }
-  };
-
-  const validateToNextPassword = (rule, value, callback) => {
-    if (value && confirmDirty) {
-      form.validateFields(["confirm"], { force: true });
-    }
-    callback();
-  };
+    },
+    [confirmDirty, form]
+  );
 
   return (
     <Form layout="horizontal">
       <Container>
         <h1>Restaurar contraseña</h1>
-
         <Form.Item label="Nueva contraseña" hasFeedback>
           {getFieldDecorator("password", {
             rules: [
               {
                 required: true,
-                message: "Por favor ingrese su nueva contraseña"
+                message: "Por favor ingrese su nueva contraseña",
               },
               {
                 min: 6,
-                message: "Debe tener al menos 6 caracteres"
+                message: "Debe tener al menos 6 caracteres",
               },
               {
-                validator: validateToNextPassword
-              }
-            ]
+                validator: validateToNextPassword,
+              },
+            ],
           })(<Input.Password onBlur={handleConfirmBlur} />)}
         </Form.Item>
         <Form.Item label="Confirmar contraseña" hasFeedback>
@@ -69,29 +80,30 @@ const RecoveryPassword = ({ pathname, form, loading, recoveryPassword }) => {
             rules: [
               {
                 required: true,
-                message: "Por favor confirme su contraseña"
+                message: "Por favor confirme su contraseña",
               },
               {
-                validator: compareToFirstPassword
-              }
-            ]
+                validator: compareToFirstPassword,
+              },
+            ],
           })(<Input.Password onBlur={handleConfirmBlur} />)}
         </Form.Item>
-
         <Row type="flex" justify="start">
           <Form.Item>
             <Button
               type="primary"
               icon="save"
               loading={loading}
-              onClick={ev => {
+              onClick={(ev) => {
                 ev.preventDefault();
                 form.validateFields(async (err, values) => {
                   if (!err) {
-                    await recoveryPassword({
-                      token,
-                      formData: R.dissoc("confirm", values)
-                    });
+                    await dispatch(
+                      recoveryPassword({
+                        token,
+                        formData: R.dissoc("confirm", values),
+                      })
+                    );
                   }
                 });
               }}
@@ -105,14 +117,4 @@ const RecoveryPassword = ({ pathname, form, loading, recoveryPassword }) => {
   );
 };
 
-const enhancer = compose(
-  Form.create(),
-  connect(
-    state => ({
-      loading: isLoading(RECOVERY_PASSWORD, state)
-    }),
-    { recoveryPassword }
-  )
-);
-
-export default enhancer(RecoveryPassword);
+export default Form.create()(RecoveryPassword);
