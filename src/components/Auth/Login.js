@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as R from "ramda";
 import styled from "styled-components";
-import { compose } from "recompose";
 import { Icon, Input, Button, Form } from "antd";
 import { login, LOGIN } from "../../store/actions/user";
 import { isLoading } from "../../utils/actions";
 import SignUp from "./SignUp";
-import { withRouter } from "react-router-dom";
 import ValidateUser from "./ValidateUser";
 import RecoveryPassword from "./RecoveryPassword";
 import ForgotPassword from "./ForgotPassword";
+import { useLocation } from "react-router-dom";
 
 const Content = styled.div`
   display: flex;
@@ -39,11 +38,16 @@ const WrapperButton = styled.div`
   justify-content: center;
 `;
 
-const Login = ({ form, login, loading, location }) => {
+const Login = ({ form }) => {
   const { getFieldDecorator } = form;
+
+  const loading = useSelector((state) => isLoading(LOGIN, state));
+  const dispatch = useDispatch();
+  const { pathname } = useLocation();
+
   const [showSignUp, setSignUp] = useState(false);
   const [showForgot, setForgot] = useState(false);
-  const { pathname } = location;
+
   return (
     <>
       {R.contains("/validate", pathname) ? (
@@ -55,11 +59,11 @@ const Login = ({ form, login, loading, location }) => {
           ) : (
             <Content>
               <Form
-                onSubmit={ev => {
+                onSubmit={(ev) => {
                   ev.preventDefault();
                   form.validateFields(async (err, values) => {
                     if (!err) {
-                      await login(values);
+                      await dispatch(login(values));
                     }
                   });
                 }}
@@ -68,8 +72,8 @@ const Login = ({ form, login, loading, location }) => {
                 <Form.Item>
                   {getFieldDecorator("email", {
                     rules: [
-                      { required: true, message: "Debe ingresar el usuario" }
-                    ]
+                      { required: true, message: "Debe ingresar el usuario" },
+                    ],
                   })(
                     <Input
                       prefix={
@@ -86,8 +90,11 @@ const Login = ({ form, login, loading, location }) => {
                 <Form.Item>
                   {getFieldDecorator("password", {
                     rules: [
-                      { required: true, message: "Debe ingresar la contraseña" }
-                    ]
+                      {
+                        required: true,
+                        message: "Debe ingresar la contraseña",
+                      },
+                    ],
                   })(
                     <Input
                       prefix={
@@ -134,15 +141,4 @@ const Login = ({ form, login, loading, location }) => {
   );
 };
 
-const enhancer = compose(
-  withRouter,
-  Form.create(),
-  connect(
-    state => ({
-      loading: isLoading(LOGIN, state)
-    }),
-    { login }
-  )
-);
-
-export default enhancer(Login);
+export default Form.create()(Login);
