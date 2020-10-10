@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { compose } from "recompose";
-import { connect } from "react-redux";
+import React, { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import * as R from "ramda";
 import {
@@ -23,15 +22,18 @@ import Upload from "../components/Upload";
 import { PROVIDER } from "./selector";
 
 const { Option } = Select;
-const NewInvoice = ({
-  form,
-  visible,
-  setShowModalInvoice,
-  loading,
-  createInvoice,
-  invoice,
-  updateInvoice,
-}) => {
+
+const NewInvoice = ({ form, visible, setShowModalInvoice, invoice }) => {
+  const isCreating = useSelector((state) => isLoading(CREATE_INVOICE, state));
+  const isUpdating = useSelector((state) => isLoading(UPDATE_INVOICE, state));
+
+  const loading = useMemo(() => isCreating || isUpdating, [
+    isCreating,
+    isUpdating,
+  ]);
+
+  const dispatch = useDispatch();
+
   const { getFieldDecorator, setFieldsValue, getFieldValue } = form;
 
   useEffect(() => {
@@ -68,21 +70,25 @@ const NewInvoice = ({
           loading={loading}
           onClick={(e) => {
             e.preventDefault();
-            form.validateFields(async (err, values) => {
+            form.validateFields((err, values) => {
               if (!err) {
                 if (!invoice) {
-                  await createInvoice({
-                    ...values,
-                    date: new Date(values.date).getTime(),
-                  });
-                } else {
-                  await updateInvoice({
-                    idInvoice: invoice._id,
-                    formData: {
+                  dispatch(
+                    createInvoice({
                       ...values,
                       date: new Date(values.date).getTime(),
-                    },
-                  });
+                    })
+                  );
+                } else {
+                  dispatch(
+                    updateInvoice({
+                      idInvoice: invoice._id,
+                      formData: {
+                        ...values,
+                        date: new Date(values.date).getTime(),
+                      },
+                    })
+                  );
                 }
                 setShowModalInvoice(false);
               }
@@ -205,15 +211,4 @@ const NewInvoice = ({
   );
 };
 
-const enhancer = compose(
-  Form.create(),
-  connect(
-    (state) => ({
-      loading:
-        isLoading(CREATE_INVOICE, state) || isLoading(UPDATE_INVOICE, state),
-    }),
-    { createInvoice, updateInvoice }
-  )
-);
-
-export default enhancer(NewInvoice);
+export default Form.create()(NewInvoice);
