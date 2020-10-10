@@ -37,6 +37,7 @@ const Title = styled.h1`
   margin: 0;
   margin-left: 20px;
   color: white;
+  white-space: nowrap;
 `;
 
 const Content = styled.div`
@@ -57,10 +58,6 @@ const LinksContainer = styled.div`
 
   a {
     color: white;
-  }
-
-  @media (max-width: 600px) {
-    display: none;
   }
 `;
 
