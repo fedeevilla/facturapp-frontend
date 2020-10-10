@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { compose } from "ramda";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Login from "../components/Auth/Login";
 import Layout from "../components/Layout/Layout";
@@ -27,14 +26,19 @@ const ContentSpinner = styled.div`
   justify-content: center;
 `;
 
-const App = ({ token, userId, fetchProfile, fetching }) => {
+const App = () => {
+  const token = useSelector(({ user }) => user.token);
+  const userId = useSelector(({ user }) => user.userId);
+  const isFetching = useSelector((state) => isLoading(FETCH_USER, state));
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (token && !userId) {
-      fetchProfile();
+      dispatch(fetchProfile());
     }
-  }, [fetchProfile, token, userId]);
+  }, [dispatch, token, userId]);
 
-  if (fetching) {
+  if (isFetching) {
     return (
       <ContentSpinner>
         <Spin />
@@ -49,15 +53,4 @@ const App = ({ token, userId, fetchProfile, fetching }) => {
   );
 };
 
-const enhancer = compose(
-  connect(
-    state => ({
-      token: state.user.token,
-      userId: state.user._id,
-      fetching: isLoading(FETCH_USER, state)
-    }),
-    { fetchProfile }
-  )
-);
-
-export default enhancer(App);
+export default App;
