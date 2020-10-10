@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { compose } from "recompose";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Input, Icon, Row, Avatar } from "antd";
 import { getOptimizedImage } from "../../utils/images";
 import Upload from "../Upload";
@@ -15,7 +14,11 @@ const Container = styled.div`
   margin: 20px;
 `;
 
-const PersonalInformation = ({ form, user, updateUser, loading }) => {
+const PersonalInformation = ({ form }) => {
+  const user = useSelector(({ user }) => user);
+  const loading = useSelector((state) => isLoading(UPDATE_USER, state));
+  const dispatch = useDispatch();
+
   const { getFieldDecorator, getFieldValue, setFieldsValue } = form;
 
   useEffect(() => {
@@ -33,13 +36,13 @@ const PersonalInformation = ({ form, user, updateUser, loading }) => {
             rules: [
               {
                 required: true,
-                message: "Este campo no puede estar vacío"
+                message: "Este campo no puede estar vacío",
               },
               {
                 min: 5,
-                message: "Debe tener al menos 5 caracteres"
-              }
-            ]
+                message: "Debe tener al menos 5 caracteres",
+              },
+            ],
           })(
             <Input
               prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
@@ -75,7 +78,7 @@ const PersonalInformation = ({ form, user, updateUser, loading }) => {
                 label={"Seleccionar imagen"}
                 options={{ upload_preset: "invoices" }}
                 action={process.env.REACT_APP_CLOUDINARY_URI}
-                onChange={avatar => {
+                onChange={(avatar) => {
                   setFieldsValue({ avatar });
                 }}
               />
@@ -88,11 +91,11 @@ const PersonalInformation = ({ form, user, updateUser, loading }) => {
               type="primary"
               icon="save"
               loading={loading}
-              onClick={ev => {
+              onClick={(ev) => {
                 ev.preventDefault();
                 form.validateFields(async (err, values) => {
                   if (!err) {
-                    await updateUser(values);
+                    await dispatch(updateUser(values));
                   }
                 });
               }}
@@ -106,15 +109,4 @@ const PersonalInformation = ({ form, user, updateUser, loading }) => {
   );
 };
 
-const enhancer = compose(
-  Form.create(),
-  connect(
-    state => ({
-      user: state.user,
-      loading: isLoading(UPDATE_USER, state)
-    }),
-    { updateUser }
-  )
-);
-
-export default enhancer(PersonalInformation);
+export default Form.create()(PersonalInformation);
