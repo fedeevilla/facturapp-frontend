@@ -54,7 +54,25 @@ const InvoicesList = () => {
         title: "Fecha",
         dataIndex: "date",
         key: "date",
-        render: (date) => moment(date).format("DD/MM/YYYY"),
+        render: (date) => {
+          return (
+            <div>
+              <p style={{ textAlign: "center", marginBottom: 0, fontSize: 12 }}>
+                {moment(date).format("DD/MM/YYYY")}
+              </p>
+              <p
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 10,
+                  marginBottom: 0,
+                }}
+              >
+                {moment(date).format("HH:mm:ss")}
+              </p>
+            </div>
+          );
+        },
       },
       {
         title: "Proveedor",
