@@ -2,7 +2,8 @@ import { Button, InputNumber } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/macro";
-import { updateUsdBalance } from "../store/actions/user";
+import { updateUsdBalance, UPDATE_USER } from "../store/actions/user";
+import { isLoading } from "../utils/actions";
 
 const Container = styled.div`
   margin: auto;
@@ -17,6 +18,7 @@ const Container = styled.div`
 
 const Balances = () => {
   const usdBalance = useSelector(({ user }) => user.usdBalance);
+  const loading = useSelector((state) => isLoading(UPDATE_USER, state));
   const dispatch = useDispatch();
   const [balance, setBalance] = useState(usdBalance);
 
@@ -38,6 +40,8 @@ const Balances = () => {
         onClick={() =>
           dispatch(updateUsdBalance({ usdBalance: Number(balance) }))
         }
+        disabled={loading}
+        loading={loading}
       >
         Guardar
       </Button>
