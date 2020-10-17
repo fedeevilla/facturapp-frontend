@@ -5,12 +5,12 @@ const DEFAULT_OPTIONS = {
   crossDomain: true,
   responseType: "json",
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 };
 
 const api = {
-  request: async function({ url, method, data = {}, ...rest }) {
+  request: async function ({ url, method, data = {}, ...rest }) {
     try {
       const response = await axios({
         ...DEFAULT_OPTIONS,
@@ -19,9 +19,9 @@ const api = {
         data,
         headers: {
           ...DEFAULT_OPTIONS.headers,
-          token: `${localStorage.getItem("token")}`
+          token: `${localStorage.getItem("token")}`,
         },
-        ...rest
+        ...rest,
       });
 
       if (response.status >= 400) throw response;
@@ -36,11 +36,11 @@ const api = {
     }
   },
   user: {
-    login: async function(formData) {
+    login: async function (formData) {
       const { error, data } = await api.request({
         url: "user/login",
         method: "post",
-        data: formData
+        data: formData,
       });
 
       if (error) {
@@ -49,11 +49,11 @@ const api = {
 
       return Promise.resolve(data);
     },
-    signup: async function(formData) {
+    signup: async function (formData) {
       const { error, data } = await api.request({
         url: "user/signup",
         method: "post",
-        data: formData
+        data: formData,
       });
 
       if (error) {
@@ -62,10 +62,10 @@ const api = {
 
       return Promise.resolve(data);
     },
-    fetch: async function() {
+    fetch: async function () {
       const { error, data } = await api.request({
         url: `user/fetch`,
-        method: "GET"
+        method: "GET",
       });
       if (error) {
         return Promise.reject(error);
@@ -73,11 +73,11 @@ const api = {
 
       return Promise.resolve(data);
     },
-    update: async function(formData) {
+    update: async function (formData) {
       const { error, data } = await api.request({
         url: `user/profile`,
         method: "PATCH",
-        data: formData
+        data: formData,
       });
       if (error) {
         return Promise.reject(error);
@@ -85,11 +85,23 @@ const api = {
 
       return Promise.resolve(data);
     },
-    changePassword: async function(formData) {
+    balance: async function (formData) {
+      const { error, data } = await api.request({
+        url: `user/balance`,
+        method: "PATCH",
+        data: formData,
+      });
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
+    },
+    changePassword: async function (formData) {
       const { error, data } = await api.request({
         url: `user/reset`,
         method: "PUT",
-        data: formData
+        data: formData,
       });
       if (error) {
         return Promise.reject(error);
@@ -97,10 +109,10 @@ const api = {
 
       return Promise.resolve(data);
     },
-    activate: async function(token) {
+    activate: async function (token) {
       const { error, data } = await api.request({
         url: `user/validate/${token}`,
-        method: "PUT"
+        method: "PUT",
       });
       if (error) {
         return Promise.reject(error);
@@ -108,11 +120,11 @@ const api = {
 
       return Promise.resolve(data);
     },
-    recoveryPassword: async function(token, formData) {
+    recoveryPassword: async function (token, formData) {
       const { error, data } = await api.request({
         url: `user/recover/${token}`,
         method: "PUT",
-        data: formData
+        data: formData,
       });
       if (error) {
         return Promise.reject(error);
@@ -120,24 +132,11 @@ const api = {
 
       return Promise.resolve(data);
     },
-    sendEmailPassword: async function(formData) {
+    sendEmailPassword: async function (formData) {
       const { error, data } = await api.request({
         url: `user/recover`,
         method: "PUT",
-        data: formData
-      });
-      if (error) {
-        return Promise.reject(error);
-      }
-
-      return Promise.resolve(data);
-    }
-  },
-  invoices: {
-    fetch: async function() {
-      const { error, data } = await api.request({
-        url: `invoices`,
-        method: "GET"
+        data: formData,
       });
       if (error) {
         return Promise.reject(error);
@@ -145,11 +144,24 @@ const api = {
 
       return Promise.resolve(data);
     },
-    create: async function(formData) {
+  },
+  invoices: {
+    fetch: async function () {
+      const { error, data } = await api.request({
+        url: `invoices`,
+        method: "GET",
+      });
+      if (error) {
+        return Promise.reject(error);
+      }
+
+      return Promise.resolve(data);
+    },
+    create: async function (formData) {
       const { error, data } = await api.request({
         url: `invoices`,
         method: "POST",
-        data: formData
+        data: formData,
       });
 
       if (error) {
@@ -158,10 +170,10 @@ const api = {
 
       return data;
     },
-    delete: async function(idInvoice) {
+    delete: async function (idInvoice) {
       const { error, data } = await api.request({
         url: `invoices/${idInvoice}`,
-        method: "DELETE"
+        method: "DELETE",
       });
 
       if (error) {
@@ -170,11 +182,11 @@ const api = {
 
       return Promise.resolve(data);
     },
-    update: async function(idInvoice, formData) {
+    update: async function (idInvoice, formData) {
       const { error, data } = await api.request({
         url: `invoices/${idInvoice}`,
         method: "PUT",
-        data: formData
+        data: formData,
       });
 
       if (error) {
@@ -182,8 +194,8 @@ const api = {
       }
 
       return Promise.resolve(data);
-    }
-  }
+    },
+  },
 };
 
 export default api;

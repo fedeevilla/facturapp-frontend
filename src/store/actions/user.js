@@ -93,6 +93,19 @@ export const updateUser = createApiThunk({
   },
 });
 
+export const updateUsdBalance = createApiThunk({
+  action: UPDATE_USER,
+  request: async (formData) => await api.user.balance(formData),
+  resolvedMessage: {
+    message: "Éxito",
+    description: "El balance se actualizó correctamente",
+  },
+  rejectedMessage: {
+    message: "Error",
+    description: "Hubo problemas con la modificación del balance.",
+  },
+});
+
 export const changePassword = createApiThunk({
   action: CHANGE_PASSWORD,
   request: async (formData) => {

@@ -11,7 +11,7 @@ import {
   duplicateInvoice,
   DUPLICATE_INVOICE,
 } from "../store/actions/invoices";
-
+import Balances from "../components/Balances";
 import NewInvoice from "./NewInvoice";
 import { PROVIDER } from "./selector";
 import ReportInvoices from "../components/Invoice/ReportInvoices";
@@ -167,6 +167,7 @@ const InvoicesList = () => {
   return (
     <Wrapper>
       <ReportInvoices invoices={sortedInvoices} />
+      <Balances />
       <Table
         style={{ margin: "auto" }}
         loading={duplicating || deleting}
