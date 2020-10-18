@@ -12,8 +12,8 @@ const Container = styled.div`
   justify-content: space-around;
   align-items: baseline;
   background: whitesmoke;
-  padding: 20;
-  border-radius: 6;
+  padding: 20px;
+  border-radius: 6px;
 `;
 
 const Balances = () => {
