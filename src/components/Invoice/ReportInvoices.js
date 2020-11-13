@@ -8,6 +8,7 @@ import {
 } from "./selector";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   display: flex;
@@ -48,6 +49,8 @@ const Amount = styled.span`
 `;
 
 const ReportInvoices = ({ invoices }) => {
+  const { usdBalance, usdBankUS, usdBankAR } = useSelector(({ user }) => user);
+
   return (
     <Container>
       <span>
@@ -77,6 +80,10 @@ const ReportInvoices = ({ invoices }) => {
         <h3>
           <b>{`Facturación parcial anual (${moment().format("YYYY")}): `}</b>
           <Amount>${lastYearPartialAmount(invoices)}</Amount>
+        </h3>
+        <h3>
+          <b>Balance USD: </b>
+          <Amount>$ {usdBalance + usdBankUS + usdBankAR}</Amount>
         </h3>
       </span>
       <Links>
