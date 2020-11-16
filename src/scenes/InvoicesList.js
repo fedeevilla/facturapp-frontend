@@ -140,7 +140,7 @@ const InvoicesList = () => {
               {width > WIDTH_BREAKPOINT && (
                 <Tooltip title="Duplicar factura" placement="bottom">
                   <Button
-                    onClick={() => dispatch(duplicateInvoice(invoice))}
+                    onClick={() => dispatch(duplicateInvoice({...invoice, date: new Date().getTime()}))}
                     loading={duplicating && idLoading === _id}
                     shape="circle"
                     icon="plus"
