@@ -49,7 +49,9 @@ const Amount = styled.span`
 `;
 
 const ReportInvoices = ({ invoices }) => {
-  const { usdBalance, usdBankUS, usdBankAR } = useSelector(({ user }) => user);
+  const { usdBalance, usdBankUS, usdBankAR, isPremiun } = useSelector(
+    ({ user }) => user
+  );
 
   return (
     <Container>
@@ -81,10 +83,12 @@ const ReportInvoices = ({ invoices }) => {
           <b>{`Facturación parcial anual (${moment().format("YYYY")}): `}</b>
           <Amount>${lastYearPartialAmount(invoices)}</Amount>
         </h3>
-        <h3>
-          <b>Balance USD: </b>
-          <Amount>$ {usdBalance + usdBankUS + usdBankAR}</Amount>
-        </h3>
+        {isPremiun && (
+          <h3>
+            <b>Balance USD: </b>
+            <Amount>$ {usdBalance + usdBankUS + usdBankAR}</Amount>
+          </h3>
+        )}
       </span>
       <Links>
         <Link style={{ margin: "0 auto" }} to="/categories">
