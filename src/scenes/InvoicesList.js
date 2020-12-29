@@ -32,6 +32,7 @@ const Footer = styled.div`
 
 const InvoicesList = () => {
   const { width } = useWindowDimensions();
+  const user = useSelector(({ user }) => user);
   const [showModalInvoice, setShowModalInvoice] = useState(false);
   const [invoice, setInvoice] = useState(null);
   const invoices = useSelector(({ invoices }) => invoices.list);
@@ -140,7 +141,14 @@ const InvoicesList = () => {
               {width > WIDTH_BREAKPOINT && (
                 <Tooltip title="Duplicar factura" placement="bottom">
                   <Button
-                    onClick={() => dispatch(duplicateInvoice({...invoice, date: new Date().getTime()}))}
+                    onClick={() =>
+                      dispatch(
+                        duplicateInvoice({
+                          ...invoice,
+                          date: new Date().getTime(),
+                        })
+                      )
+                    }
                     loading={duplicating && idLoading === _id}
                     shape="circle"
                     icon="plus"
@@ -167,7 +175,7 @@ const InvoicesList = () => {
   return (
     <Wrapper>
       <ReportInvoices invoices={sortedInvoices} />
-      <Balances />
+      {user.isPremiun && <Balances />}
       <Table
         style={{ margin: "auto" }}
         loading={duplicating || deleting}
