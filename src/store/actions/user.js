@@ -47,7 +47,8 @@ export const signup = createApiThunk({
   request: async (formData) => await api.user.signup(formData),
   resolvedMessage: {
     message: "¡Cuenta creada! 💪",
-    description: "Te enviamos un email para activar tu cuenta",
+    // description: "Te enviamos un email para activar tu cuenta",
+    description: "Ahora debes ingresar tus credenciales",
   },
   rejectedMessage: {
     message: "Error",
