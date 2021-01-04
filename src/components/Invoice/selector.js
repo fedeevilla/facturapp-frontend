@@ -2,18 +2,18 @@
 import moment from "moment";
 import * as R from "ramda";
 
-const groupingInvoices = invoices => {
-  const mappingInvoices = invoices.map(i => {
+const groupingInvoices = (invoices) => {
+  const mappingInvoices = invoices.map((i) => {
     return {
       ...i,
-      group: moment(i.date).format("YYYYMM")
+      group: moment(i.date).format("YYYYMM"),
     };
   });
 
   return R.groupBy(R.prop("group"))(mappingInvoices);
 };
 
-export const lastYearAmount = invoices => {
+export const lastYearAmount = (invoices) => {
   const groupping = groupingInvoices(invoices);
 
   const date = new Date();
@@ -28,13 +28,13 @@ export const lastYearAmount = invoices => {
   let suma = 0;
   for (let i = 0; i < 12; i++) {
     !R.isNil(groupping[lastMonths[i]]) &&
-      R.forEach(i => (suma += i.amount), groupping[lastMonths[i]]);
+      R.forEach((i) => (suma += i.amount), groupping[lastMonths[i]]);
   }
 
   return suma;
 };
 
-export const thisMonthAmount = invoices => {
+export const thisMonthAmount = (invoices) => {
   const groupping = groupingInvoices(invoices);
 
   const date = new Date();
@@ -42,28 +42,31 @@ export const thisMonthAmount = invoices => {
     date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2);
   let suma = 0;
   !R.isNil(groupping[thisMonth]) &&
-    R.forEach(i => (suma += i.amount), groupping[thisMonth]);
+    R.forEach((i) => (suma += i.amount), groupping[thisMonth]);
 
   return suma;
 };
 
-export const lastMonthAmount = invoices => {
+export const lastMonthAmount = (invoices) => {
   const groupping = groupingInvoices(invoices);
 
   const date = new Date();
-  const thisMonth = date.getFullYear() + ("0" + date.getMonth()).slice(-2);
+  const thisMonth = date.getFullYear() + ("0" + date.getMonth() + 1).slice(-2);
+
+  const lastMonth = moment(thisMonth).subtract(1, "month").format("YYYYMM");
+
   let suma = 0;
-  !R.isNil(groupping[thisMonth]) &&
-    R.forEach(i => (suma += i.amount), groupping[thisMonth]);
+  !R.isNil(groupping[lastMonth]) &&
+    R.forEach((i) => (suma += i.amount), groupping[lastMonth]);
 
   return suma;
 };
 
-export const lastYearPartialAmount = invoices => {
+export const lastYearPartialAmount = (invoices) => {
   const year = new Date().getFullYear().toString();
   let suma = 0;
 
-  R.forEach(i => {
+  R.forEach((i) => {
     if (year === moment(i.date).format("YYYY")) {
       suma += i.amount;
     }
@@ -81,7 +84,7 @@ export const months = () => {
   return R.reverse(res);
 };
 
-export const amountPerMonth = invoices => {
+export const amountPerMonth = (invoices) => {
   const groupping = groupingInvoices(invoices);
 
   const date = new Date();
@@ -96,7 +99,7 @@ export const amountPerMonth = invoices => {
   for (let i = 0; i < 12; i++) {
     let suma = 0;
     !R.isNil(groupping[lastMonths[i]]) &&
-      R.forEach(i => (suma += i.amount), groupping[lastMonths[i]]);
+      R.forEach((i) => (suma += i.amount), groupping[lastMonths[i]]);
     res.push(suma);
   }
 
