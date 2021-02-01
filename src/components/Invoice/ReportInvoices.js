@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components/macro";
 import {
-  lastYearAmount,
+  lastInterannualAmount,
   thisMonthAmount,
   lastMonthAmount,
   lastYearPartialAmount,
+  lastYearAmount,
 } from "./selector";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -63,7 +64,7 @@ const ReportInvoices = ({ invoices }) => {
               .format("MMM YYYY")}
             - ${moment().format("MMM YYYY")}): `}
           </b>
-          <Amount>${lastYearAmount(invoices)}</Amount>
+          <Amount>${lastInterannualAmount(invoices)}</Amount>
         </h3>
         <h3>
           <b>{`Facturación del mes actual (${moment().format(
@@ -82,6 +83,12 @@ const ReportInvoices = ({ invoices }) => {
         <h3>
           <b>{`Facturación parcial anual (${moment().format("YYYY")}): `}</b>
           <Amount>${lastYearPartialAmount(invoices)}</Amount>
+        </h3>
+        <h3>
+          <b>{`Facturación del año pasado (${moment()
+            .subtract(1, "years")
+            .format("YYYY")}): `}</b>
+          <Amount>${lastYearAmount(invoices)}</Amount>
         </h3>
         {isPremiun && (
           <h3>

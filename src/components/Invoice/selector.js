@@ -13,16 +13,12 @@ const groupingInvoices = (invoices) => {
   return R.groupBy(R.prop("group"))(mappingInvoices);
 };
 
-export const lastYearAmount = (invoices) => {
+export const lastInterannualAmount = (invoices) => {
   const groupping = groupingInvoices(invoices);
-
   const date = new Date();
   const lastMonths = [];
   for (let i = 1; i < 13; i++) {
-    lastMonths.push(
-      //TODO review this
-      date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2)
-    );
+    lastMonths.push(moment(date).format("YYYYMM"));
     date.setMonth(date.getMonth() - 1);
   }
 
@@ -30,6 +26,21 @@ export const lastYearAmount = (invoices) => {
   for (let i = 0; i < 12; i++) {
     !R.isNil(groupping[lastMonths[i]]) &&
       R.forEach((i) => (suma += i.amount), groupping[lastMonths[i]]);
+  }
+
+  return suma;
+};
+
+export const lastYearAmount = (invoices) => {
+  const groupping = groupingInvoices(invoices);
+  const date = new Date();
+  const lastYear = moment(date).subtract(1, "year").format("YYYY");
+
+  let suma = 0;
+  for (let i = 0; i < 12; i++) {
+    const currentDate = moment(lastYear).add(i, "month").format("YYYYMM");
+    !R.isNil(groupping[currentDate]) &&
+      R.forEach((i) => (suma += i.amount), groupping[currentDate]);
   }
 
   return suma;
@@ -87,10 +98,7 @@ export const amountPerMonth = (invoices) => {
   const date = new Date();
   const lastMonths = [];
   for (let i = 1; i < 13; i++) {
-    lastMonths.push(
-      // TODO review this
-      date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2)
-    );
+    lastMonths.push(moment(date).format("YYYYMM"));
     date.setMonth(date.getMonth() - 1);
   }
   const res = [];
