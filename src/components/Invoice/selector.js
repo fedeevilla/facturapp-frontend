@@ -20,6 +20,7 @@ export const lastYearAmount = (invoices) => {
   const lastMonths = [];
   for (let i = 1; i < 13; i++) {
     lastMonths.push(
+      //TODO review this
       date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2)
     );
     date.setMonth(date.getMonth() - 1);
@@ -36,10 +37,9 @@ export const lastYearAmount = (invoices) => {
 
 export const thisMonthAmount = (invoices) => {
   const groupping = groupingInvoices(invoices);
-
   const date = new Date();
-  const thisMonth =
-    date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2);
+  const thisMonth = moment(date).format("YYYYMM");
+
   let suma = 0;
   !R.isNil(groupping[thisMonth]) &&
     R.forEach((i) => (suma += i.amount), groupping[thisMonth]);
@@ -49,11 +49,8 @@ export const thisMonthAmount = (invoices) => {
 
 export const lastMonthAmount = (invoices) => {
   const groupping = groupingInvoices(invoices);
-
   const date = new Date();
-  const thisMonth = date.getFullYear() + ("0" + date.getMonth() + 1).slice(-2);
-
-  const lastMonth = moment(thisMonth).subtract(1, "month").format("YYYYMM");
+  const lastMonth = moment(date).subtract(1, "month").format("YYYYMM");
 
   let suma = 0;
   !R.isNil(groupping[lastMonth]) &&
@@ -91,6 +88,7 @@ export const amountPerMonth = (invoices) => {
   const lastMonths = [];
   for (let i = 1; i < 13; i++) {
     lastMonths.push(
+      // TODO review this
       date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2)
     );
     date.setMonth(date.getMonth() - 1);
