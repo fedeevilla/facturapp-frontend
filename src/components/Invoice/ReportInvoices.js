@@ -6,6 +6,7 @@ import {
   lastMonthAmount,
   lastYearPartialAmount,
   lastYearAmount,
+  lastInterannualAmountNext,
 } from "./selector";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -50,7 +51,7 @@ const Amount = styled.span`
 `;
 
 const ReportInvoices = ({ invoices }) => {
-  const { usdBalance, usdBankUS, usdBankAR, isPremiun } = useSelector(
+  const { usdBalance, usdBankUS, usdBankAR, isPremiun, limit } = useSelector(
     ({ user }) => user
   );
 
@@ -65,6 +66,21 @@ const ReportInvoices = ({ invoices }) => {
             - ${moment().format("MMM YYYY")}): `}
           </b>
           <Amount>${lastInterannualAmount(invoices)}</Amount>
+        </h3>
+        <h3>
+          <b>{`Límite para facturar: `}</b>
+          <Amount>
+            ${(limit - lastInterannualAmount(invoices)).toFixed(2)}
+          </Amount>
+        </h3>
+        <h3>
+          <b>
+            {`Siguiente Facturación interanual (${moment()
+              .subtract(10, "months")
+              .format("MMM YYYY")}
+            - ${moment().add(1, "months").format("MMM YYYY")}): `}
+          </b>
+          <Amount>${lastInterannualAmountNext(invoices)}</Amount>
         </h3>
         <h3>
           <b>{`Facturación del mes actual (${moment().format(

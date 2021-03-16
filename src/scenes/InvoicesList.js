@@ -16,6 +16,7 @@ import NewInvoice from "./NewInvoice";
 import { PROVIDER } from "./selector";
 import ReportInvoices from "../components/Invoice/ReportInvoices";
 import useWindowDimensions from "../hooks/useWindowDimensions";
+import Limits from "../components/Limits";
 
 const WIDTH_BREAKPOINT = 630;
 
@@ -176,6 +177,7 @@ const InvoicesList = () => {
     <Wrapper>
       <ReportInvoices invoices={sortedInvoices} />
       {user.isPremiun && <Balances />}
+      <Limits />
       <Table
         style={{ margin: "auto" }}
         loading={duplicating || deleting}

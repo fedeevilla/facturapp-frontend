@@ -31,6 +31,24 @@ export const lastInterannualAmount = (invoices) => {
   return suma;
 };
 
+export const lastInterannualAmountNext = (invoices) => {
+  const groupping = groupingInvoices(invoices);
+  const date = new Date();
+  const lastMonths = [];
+  for (let i = 2; i < 13; i++) {
+    lastMonths.push(moment(date).format("YYYYMM"));
+    date.setMonth(date.getMonth() - 1);
+  }
+
+  let suma = 0;
+  for (let i = 0; i < 12; i++) {
+    !R.isNil(groupping[lastMonths[i]]) &&
+      R.forEach((i) => (suma += i.amount), groupping[lastMonths[i]]);
+  }
+
+  return suma;
+};
+
 export const lastYearAmount = (invoices) => {
   const groupping = groupingInvoices(invoices);
   const date = new Date();
