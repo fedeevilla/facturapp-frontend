@@ -116,9 +116,9 @@ export const amountPerMonth = (invoices) => {
 
   const date = new Date();
   const lastMonths = [];
-  for (let i = 1; i < 13; i++) {
-    lastMonths.push(moment(date).format("YYYYMM"));
+  for (let i = 0; i < 12; i++) {
     date.setMonth(date.getMonth() - 1);
+    lastMonths.push(moment(date).format("YYYYMM"));
   }
   const res = [];
   for (let i = 0; i < 12; i++) {
