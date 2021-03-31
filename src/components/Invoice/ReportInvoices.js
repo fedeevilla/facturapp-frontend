@@ -6,7 +6,7 @@ import {
   lastMonthAmount,
   lastYearPartialAmount,
   lastYearAmount,
-  lastInterannualAmountNext,
+  // lastInterannualAmountNext,
 } from "./selector";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -73,7 +73,7 @@ const ReportInvoices = ({ invoices }) => {
             ${(limit - lastInterannualAmount(invoices)).toFixed(2)}
           </Amount>
         </h3>
-        <h3>
+        {/* <h3>
           <b>
             {`Siguiente Facturación interanual (${moment()
               .subtract(10, "months")
@@ -81,7 +81,7 @@ const ReportInvoices = ({ invoices }) => {
             - ${moment().add(1, "months").format("MMM YYYY")}): `}
           </b>
           <Amount>${lastInterannualAmountNext(invoices)}</Amount>
-        </h3>
+        </h3> */}
         <h3>
           <b>{`Facturación del mes actual (${moment().format(
             "MMM YYYY"

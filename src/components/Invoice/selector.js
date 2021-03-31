@@ -18,8 +18,8 @@ export const lastInterannualAmount = (invoices) => {
   const date = new Date();
   const lastMonths = [];
   for (let i = 1; i < 13; i++) {
-    lastMonths.push(moment(date).format("YYYYMM"));
     date.setMonth(date.getMonth() - 1);
+    lastMonths.push(moment(date).format("YYYYMM"));
   }
 
   let suma = 0;
@@ -55,11 +55,12 @@ export const lastYearAmount = (invoices) => {
   const lastYear = moment(date).subtract(1, "year").format("YYYY");
 
   let suma = 0;
-  for (let i = 0; i < 12; i++) {
-    const currentDate = moment(lastYear).add(i, "month").format("YYYYMM");
-    !R.isNil(groupping[currentDate]) &&
-      R.forEach((i) => (suma += i.amount), groupping[currentDate]);
-  }
+  const keys = R.keys(groupping).filter((k) => k.includes(lastYear));
+  keys.forEach((k) =>
+    groupping[k].forEach((invoice) => {
+      suma += invoice.amount;
+    })
+  );
 
   return suma;
 };
