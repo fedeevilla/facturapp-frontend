@@ -2,6 +2,15 @@
 import moment from "moment";
 import * as R from "ramda";
 
+const lastMonthsFromToday = () => {
+  const date = new Date();
+  let lastMonths = [];
+  for (let i = 0; i < 12; i++) {
+    lastMonths.push(moment(date).subtract(i, "months").format("YYYYMM"));
+  }
+
+  return lastMonths;
+};
 const groupingInvoices = (invoices) => {
   const mappingInvoices = invoices.map((i) => {
     return {
@@ -15,12 +24,7 @@ const groupingInvoices = (invoices) => {
 
 export const lastInterannualAmount = (invoices) => {
   const groupping = groupingInvoices(invoices);
-  const date = new Date();
-  const lastMonths = [];
-  for (let i = 1; i < 13; i++) {
-    date.setMonth(date.getMonth() - 1);
-    lastMonths.push(moment(date).format("YYYYMM"));
-  }
+  const lastMonths = lastMonthsFromToday();
 
   let suma = 0;
   for (let i = 0; i < 12; i++) {
@@ -33,12 +37,7 @@ export const lastInterannualAmount = (invoices) => {
 
 export const lastInterannualAmountNext = (invoices) => {
   const groupping = groupingInvoices(invoices);
-  const date = new Date();
-  const lastMonths = [];
-  for (let i = 2; i < 13; i++) {
-    lastMonths.push(moment(date).format("YYYYMM"));
-    date.setMonth(date.getMonth() - 1);
-  }
+  const lastMonths = lastMonthsFromToday();
 
   let suma = 0;
   for (let i = 0; i < 12; i++) {
@@ -113,13 +112,8 @@ export const months = () => {
 
 export const amountPerMonth = (invoices) => {
   const groupping = groupingInvoices(invoices);
+  const lastMonths = lastMonthsFromToday();
 
-  const date = new Date();
-  const lastMonths = [];
-  for (let i = 0; i < 12; i++) {
-    date.setMonth(date.getMonth() - 1);
-    lastMonths.push(moment(date).format("YYYYMM"));
-  }
   const res = [];
   for (let i = 0; i < 12; i++) {
     let suma = 0;
