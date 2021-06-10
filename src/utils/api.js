@@ -67,6 +67,7 @@ const api = {
         url: `user/fetch`,
         method: "GET",
       });
+
       if (error) {
         return Promise.reject(error);
       }
@@ -79,6 +80,7 @@ const api = {
         method: "PATCH",
         data: formData,
       });
+
       if (error) {
         return Promise.reject(error);
       }
@@ -91,6 +93,7 @@ const api = {
         method: "PATCH",
         data: formData,
       });
+
       if (error) {
         return Promise.reject(error);
       }
@@ -103,6 +106,7 @@ const api = {
         method: "PUT",
         data: formData,
       });
+
       if (error) {
         return Promise.reject(error);
       }
@@ -114,6 +118,7 @@ const api = {
         url: `user/validate/${token}`,
         method: "PUT",
       });
+
       if (error) {
         return Promise.reject(error);
       }
@@ -126,6 +131,7 @@ const api = {
         method: "PUT",
         data: formData,
       });
+
       if (error) {
         return Promise.reject(error);
       }
@@ -138,6 +144,7 @@ const api = {
         method: "PUT",
         data: formData,
       });
+
       if (error) {
         return Promise.reject(error);
       }
@@ -151,6 +158,7 @@ const api = {
         url: `invoices`,
         method: "GET",
       });
+
       if (error) {
         return Promise.reject(error);
       }

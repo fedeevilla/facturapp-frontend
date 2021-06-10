@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Input, Icon, Row, Avatar } from "antd";
+
 import { getOptimizedImage } from "../../utils/images";
 import Upload from "../Upload";
 import { updateUser, UPDATE_USER } from "../../store/actions/user";
@@ -45,18 +46,18 @@ const PersonalInformation = ({ form }) => {
             ],
           })(
             <Input
-              prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
               autoComplete="name"
               placeholder="Ingrese un nombre"
+              prefix={<Icon style={{ color: "rgba(0,0,0,.25)" }} type="user" />}
             />
           )}
         </Form.Item>
         <Form.Item label="Email:" name="email">
           {getFieldDecorator("email")(
             <Input
-              prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
               readOnly
               autoComplete="email"
+              prefix={<Icon style={{ color: "rgba(0,0,0,.25)" }} type="mail" />}
             />
           )}
         </Form.Item>
@@ -64,20 +65,20 @@ const PersonalInformation = ({ form }) => {
           {getFieldDecorator("avatar")(
             <>
               <Avatar
-                size="large"
+                className="avatar"
                 icon="user"
+                shape="circle"
+                size="large"
                 src={
                   getFieldValue("avatar") &&
                   getOptimizedImage(getFieldValue("avatar"))
                 }
-                shape="circle"
-                className="avatar"
                 style={{ marginRight: 20 }}
               />
               <Upload
+                action={process.env.REACT_APP_CLOUDINARY_URI}
                 label={"Seleccionar imagen"}
                 options={{ upload_preset: "invoices" }}
-                action={process.env.REACT_APP_CLOUDINARY_URI}
                 onChange={(avatar) => {
                   setFieldsValue({ avatar });
                 }}
@@ -85,12 +86,12 @@ const PersonalInformation = ({ form }) => {
             </>
           )}
         </Form.Item>
-        <Row type="flex" justify="start">
+        <Row justify="start" type="flex">
           <Form.Item>
             <Button
-              type="primary"
               icon="save"
               loading={loading}
+              type="primary"
               onClick={(ev) => {
                 ev.preventDefault();
                 form.validateFields(async (err, values) => {

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import * as R from "ramda";
 import { Button, Form, Row, Input } from "antd";
+
 import { isLoading } from "../../utils/actions";
 import { recoveryPassword, RECOVERY_PASSWORD } from "../../store/actions/user";
 
@@ -28,9 +29,10 @@ const RecoveryPassword = ({ pathname, form }) => {
   const handleConfirmBlur = useCallback(
     (e) => {
       const { value } = e.target;
+
       setConfirmDirty({ confirmDirty: confirmDirty || !!value });
     },
-    [confirmDirty]
+    [confirmDirty],
   );
 
   const compareToFirstPassword = useCallback(
@@ -41,7 +43,7 @@ const RecoveryPassword = ({ pathname, form }) => {
         callback();
       }
     },
-    [form]
+    [form],
   );
 
   const validateToNextPassword = useCallback(
@@ -51,14 +53,14 @@ const RecoveryPassword = ({ pathname, form }) => {
       }
       callback();
     },
-    [confirmDirty, form]
+    [confirmDirty, form],
   );
 
   return (
     <Form layout="horizontal">
       <Container>
         <h1>Restaurar contraseña</h1>
-        <Form.Item label="Nueva contraseña" hasFeedback>
+        <Form.Item hasFeedback label="Nueva contraseña">
           {getFieldDecorator("password", {
             rules: [
               {
@@ -75,7 +77,7 @@ const RecoveryPassword = ({ pathname, form }) => {
             ],
           })(<Input.Password onBlur={handleConfirmBlur} />)}
         </Form.Item>
-        <Form.Item label="Confirmar contraseña" hasFeedback>
+        <Form.Item hasFeedback label="Confirmar contraseña">
           {getFieldDecorator("confirm", {
             rules: [
               {
@@ -88,12 +90,12 @@ const RecoveryPassword = ({ pathname, form }) => {
             ],
           })(<Input.Password onBlur={handleConfirmBlur} />)}
         </Form.Item>
-        <Row type="flex" justify="start">
+        <Row justify="start" type="flex">
           <Form.Item>
             <Button
-              type="primary"
               icon="save"
               loading={loading}
+              type="primary"
               onClick={(ev) => {
                 ev.preventDefault();
                 form.validateFields(async (err, values) => {
@@ -102,7 +104,7 @@ const RecoveryPassword = ({ pathname, form }) => {
                       recoveryPassword({
                         token,
                         formData: R.dissoc("confirm", values),
-                      })
+                      }),
                     );
                   }
                 });

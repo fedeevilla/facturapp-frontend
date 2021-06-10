@@ -6,8 +6,8 @@ export const createApiThunk = ({
   request,
   resolvedMessage,
   rejectedMessage,
-  start = true
-}) => payload => async (dispatch, getState) => {
+  start = true,
+}) => (payload) => async (dispatch, getState) => {
   try {
     start && dispatch(action.start(payload));
 
@@ -15,7 +15,7 @@ export const createApiThunk = ({
 
     if (resolvedMessage) {
       notification.success(
-        R.when(R.is(Function), message => message(response), resolvedMessage)
+        R.when(R.is(Function), (message) => message(response), resolvedMessage)
       );
     }
 
@@ -23,7 +23,7 @@ export const createApiThunk = ({
   } catch (error) {
     if (rejectedMessage) {
       notification.error(
-        R.when(R.is(Function), message => message(error), rejectedMessage)
+        R.when(R.is(Function), (message) => message(error), rejectedMessage)
       );
     }
 

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "antd";
+
 import { logout, LOGOUT } from "../../store/actions/user";
 import { isLoading } from "../../utils/actions";
 
@@ -24,11 +25,7 @@ const SignOut = () => {
   return (
     <Container>
       <WrapperButton>
-        <Button
-          type="danger"
-          disabled={loading}
-          onClick={() => dispatch(logout())}
-        >
+        <Button disabled={loading} type="danger" onClick={() => dispatch(logout())}>
           Cerrar Sesión
         </Button>
       </WrapperButton>

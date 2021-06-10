@@ -1,5 +1,6 @@
 import React from "react";
 import { Row, Col } from "antd";
+
 import PersonalInformation from "./PersonalInformation";
 import ChangePassword from "./ChangePassword";
 import SignOut from "./SignOut";
@@ -8,10 +9,10 @@ const Profile = () => {
   return (
     <>
       <Row>
-        <Col xs={24} md={12}>
+        <Col md={12} xs={24}>
           <PersonalInformation />
         </Col>
-        <Col xs={24} md={12}>
+        <Col md={12} xs={24}>
           <ChangePassword />
         </Col>
       </Row>

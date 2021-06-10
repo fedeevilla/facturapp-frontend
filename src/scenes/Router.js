@@ -1,16 +1,18 @@
 import React from "react";
 import { Switch, Redirect, Route } from "react-router-dom";
-import InvoicesList from "./InvoicesList";
+
 import Profile from "../components/Profile/Profile";
 import Categories from "../components/Categories";
+
+import InvoicesList from "./InvoicesList";
 import Graphs from "./Graphs";
 
 const Router = () => (
   <Switch>
-    <Route path="/invoices" component={InvoicesList} />
-    <Route path="/profile" component={Profile} />
-    <Route path="/categories" component={Categories} />
-    <Route path="/graphs" component={Graphs} />
+    <Route component={InvoicesList} path="/invoices" />
+    <Route component={Profile} path="/profile" />
+    <Route component={Categories} path="/categories" />
+    <Route component={Graphs} path="/graphs" />
     <Redirect to="/invoices" />
   </Switch>
 );

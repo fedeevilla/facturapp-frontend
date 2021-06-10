@@ -1,5 +1,6 @@
 import { makeAction } from "async-action-creator";
 import * as R from "ramda";
+
 import { createApiThunk } from "../../utils/thunk";
 import api from "../../utils/api";
 
@@ -35,6 +36,7 @@ export const deleteInvoice = createApiThunk({
   action: DELETE_INVOICE,
   request: async (_id) => {
     await api.invoices.delete(_id);
+
     return _id;
   },
   resolvedMessage: {

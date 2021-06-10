@@ -1,9 +1,16 @@
 import React, { useMemo, useState } from "react";
-import styled from "styled-components";
 import moment from "moment";
 import * as R from "ramda";
-import { Table, Button, Popconfirm, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
+import { EditIcon, AddIcon, DeleteIcon } from "@chakra-ui/icons";
+import {
+  Stack,
+  Text,
+  IconButton,
+  useDisclosure,
+  Button,
+} from "@chakra-ui/react";
+
 import { isLoading } from "../utils/actions";
 import {
   deleteInvoice,
@@ -12,31 +19,13 @@ import {
   DUPLICATE_INVOICE,
 } from "../store/actions/invoices";
 import Balances from "../components/Balances";
-import NewInvoice from "./NewInvoice";
-import { PROVIDER } from "./selector";
 import ReportInvoices from "../components/Invoice/ReportInvoices";
-import useWindowDimensions from "../hooks/useWindowDimensions";
 import Limits from "../components/Limits";
 
-const WIDTH_BREAKPOINT = 630;
+import NewInvoice from "./NewInvoice";
+import { PROVIDER } from "./selector";
 
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-`;
-
-const Footer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
-
-const InvoicesList = () => {
-  const { width } = useWindowDimensions();
-  const user = useSelector(({ user }) => user);
-  const [showModalInvoice, setShowModalInvoice] = useState(false);
-  const [invoice, setInvoice] = useState(null);
-  const invoices = useSelector(({ invoices }) => invoices.list);
+const InvoiceItem = ({ invoice, setInvoice }) => {
   const idLoading = useSelector(({ invoices }) => invoices.idLoading);
   const deleting = useSelector((state) => isLoading(DELETE_INVOICE, state));
   const duplicating = useSelector((state) =>
@@ -45,172 +34,110 @@ const InvoicesList = () => {
 
   const dispatch = useDispatch();
 
+  return (
+    <Stack
+      isInline
+      _hover={{ background: "green.100" }}
+      alignItems="center"
+      borderLeftColor="blue.400"
+      borderLeftRadius={4}
+      borderLeftWidth="5px"
+      justifyContent="space-between"
+      padding="2"
+      shadow="md"
+    >
+      <Stack>
+        <Text fontSize="xs" textAlign="center">
+          {moment(invoice.date).format("DD/MM/YYYY")}
+        </Text>
+        <Text fontSize="xs" fontWeight="bold" textAlign="center">
+          {moment(invoice.date).format("HH:mm:ss")}
+        </Text>
+      </Stack>
+      <Text>{PROVIDER[invoice.provider]}</Text>
+      <Text>Factura {invoice.type}</Text>
+      <Text fontWeight="bold">${invoice.amount.toFixed(2)}</Text>
+      <Stack direction={{ base: "column", md: "column", lg: "row" }}>
+        <IconButton
+          icon={<EditIcon />}
+          size="xs"
+          onClick={() => setInvoice(invoice)}
+        />
+        <IconButton
+          icon={<DeleteIcon />}
+          isLoading={deleting && idLoading === invoice._id}
+          size="xs"
+          onClick={() => dispatch(deleteInvoice(invoice._id))}
+        />
+        <IconButton
+          icon={<AddIcon />}
+          isLoading={duplicating && idLoading === invoice._id}
+          size="xs"
+          onClick={() =>
+            dispatch(
+              duplicateInvoice({
+                ...invoice,
+                date: new Date().getTime(),
+              })
+            )
+          }
+        />
+      </Stack>
+    </Stack>
+  );
+};
+
+const InvoicesList = () => {
+  const user = useSelector(({ user }) => user);
+  const [invoice, setInvoice] = useState(null);
+  const invoices = useSelector(({ invoices }) => invoices.list);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const sortedInvoices = useMemo(
     () => R.sort(R.descend(R.prop("date")), invoices || []),
     [invoices]
   );
 
-  const columns = useMemo(
-    () => [
-      {
-        title: "Fecha",
-        dataIndex: "date",
-        key: "date",
-        render: (date) => {
-          return (
-            <div>
-              <p style={{ textAlign: "center", marginBottom: 0, fontSize: 12 }}>
-                {moment(date).format("DD/MM/YYYY")}
-              </p>
-              <p
-                style={{
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 10,
-                  marginBottom: 0,
-                }}
-              >
-                {moment(date).format("HH:mm:ss")}
-              </p>
-            </div>
-          );
-        },
-      },
-      {
-        title: "Proveedor",
-        dataIndex: "provider",
-        key: "provider",
-        render: (provider) => {
-          return PROVIDER[provider];
-        },
-      },
-      {
-        title: "Tipo Factura",
-        dataIndex: "type",
-        key: "type",
-        render: (type) => {
-          return `Factura ${type}`;
-        },
-      },
-      {
-        title: "TOTAL",
-        dataIndex: "total",
-        key: "total",
-        render: (_, { amount }) => {
-          return <b>$ {amount.toFixed(2)}</b>;
-        },
-      },
-      {
-        title: "Acción",
-        dataIndex: "_id",
-        key: "action",
-        render: (_id) => {
-          const invoice = R.find(R.propEq("_id", _id), sortedInvoices);
-
-          return (
-            <div style={{ display: "flex", justifyContent: "space-around" }}>
-              {width > WIDTH_BREAKPOINT && (
-                <Tooltip title="Editar factura" placement="bottom">
-                  <Button
-                    onClick={() => {
-                      setInvoice(invoice);
-                      setShowModalInvoice(true);
-                    }}
-                    shape="circle"
-                    icon="edit"
-                    type="primary"
-                    style={{ marginRight: 20 }}
-                  />
-                </Tooltip>
-              )}
-              <Popconfirm
-                title="¿Estás seguro?"
-                onConfirm={() => dispatch(deleteInvoice(_id))}
-                okText="Eliminar"
-                cancelText="Cancelar"
-              >
-                <Tooltip title="Eliminar factura" placement="bottom">
-                  <Button
-                    loading={deleting && idLoading === _id}
-                    shape="circle"
-                    icon="delete"
-                    type="danger"
-                    style={{ marginRight: 20 }}
-                  />
-                </Tooltip>
-              </Popconfirm>
-              {width > WIDTH_BREAKPOINT && (
-                <Tooltip title="Duplicar factura" placement="bottom">
-                  <Button
-                    onClick={() =>
-                      dispatch(
-                        duplicateInvoice({
-                          ...invoice,
-                          date: new Date().getTime(),
-                        })
-                      )
-                    }
-                    loading={duplicating && idLoading === _id}
-                    shape="circle"
-                    icon="plus"
-                    type="dashed"
-                    style={{ marginRight: 20 }}
-                  />
-                </Tooltip>
-              )}
-              {width > WIDTH_BREAKPOINT && invoice.pdf && (
-                <a target="_blank" rel="noopener noreferrer" href={invoice.pdf}>
-                  <Tooltip title="Ver factura">
-                    <Button shape="circle" icon="file" type="default" />
-                  </Tooltip>
-                </a>
-              )}
-            </div>
-          );
-        },
-      },
-    ],
-    [deleting, dispatch, duplicating, idLoading, sortedInvoices, width]
-  );
-
   return (
-    <Wrapper>
-      <ReportInvoices invoices={sortedInvoices} />
-      {user.isPremiun && <Balances />}
-      <Limits />
-      <Table
-        style={{ margin: "auto" }}
-        loading={duplicating || deleting}
-        columns={
-          width < WIDTH_BREAKPOINT
-            ? [columns[0], columns[3], columns[4]]
-            : columns
-        }
-        dataSource={sortedInvoices}
-        locale={{ emptyText: "Sin datos" }}
-        rowKey="_id"
-        footer={() => (
-          <Footer>
-            <Button
-              onClick={() => {
-                setInvoice(null);
-                setShowModalInvoice(true);
-              }}
-              type="primary"
-            >
-              Nueva factura
-            </Button>
-          </Footer>
-        )}
-      />
-      {showModalInvoice && (
-        <NewInvoice
-          invoice={invoice}
-          visible={showModalInvoice}
-          setShowModalInvoice={setShowModalInvoice}
-        />
-      )}
-    </Wrapper>
+    <Stack
+      direction={{ base: "column", md: "column", lg: "row" }}
+      spacing={12}
+      padding={{ lg: 10, base: 2, md: 5 }}
+    >
+      <Stack
+        width={{ base: "100%", md: "100%", lg: "50%" }}
+        minWidth={{ base: "100%", md: "100%", lg: "470px" }}
+        maxWidth={{ base: "100%", md: "100%", lg: "470px" }}
+      >
+        <Stack justifyContent="flex-start" spacing={12}>
+          <ReportInvoices invoices={sortedInvoices} />
+          {user.isPremiun && <Balances />}
+          <Limits />
+        </Stack>
+      </Stack>
+      <Stack width="100%">
+        <Button
+          colorScheme="blue"
+          onClick={() => {
+            setInvoice(null);
+            onOpen();
+          }}
+        >
+          Nueva factura
+        </Button>
+        {sortedInvoices.map((invoice) => (
+          <InvoiceItem
+            key={invoice._id}
+            invoice={invoice}
+            setInvoice={(invoice) => {
+              setInvoice(invoice);
+              onOpen();
+            }}
+          />
+        ))}
+      </Stack>
+      <NewInvoice invoice={invoice} isOpen={isOpen} onClose={onClose} />
+    </Stack>
   );
 };
 

@@ -2,9 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import * as R from "ramda";
 import { Button } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+
 import { isLoading } from "../../utils/actions";
 import { activateUser, ACTIVATE_USER } from "../../store/actions/user";
-import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div`
   display: grid;
@@ -22,6 +23,7 @@ const ValidateUser = ({ pathname }) => {
   const dispatch = useDispatch();
 
   const token = R.split("/validate/", pathname)[1];
+
   return (
     <Container>
       <h1>Validación de cuenta</h1>

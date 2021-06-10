@@ -1,136 +1,74 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import * as R from "ramda";
-import styled from "styled-components";
-import { Icon, Input, Button, Form } from "antd";
-import { login, LOGIN } from "../../store/actions/user";
-import { isLoading } from "../../utils/actions";
+import { Button, Input, Box, Stack } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+
+import { login } from "../../store/actions/user";
+
 import SignUp from "./SignUp";
-// import ValidateUser from "./ValidateUser";
-// import RecoveryPassword from "./RecoveryPassword";
-// import ForgotPassword from "./ForgotPassword";
-// import { useLocation } from "react-router-dom";
 
-const Content = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 30px;
-  margin: 0 auto;
-  margin-top: 50px;
-  width: 300px;
-  background: whitesmoke;
-  border-radius: 15px;
-
-  .login-form {
-    width: 100%;
-  }
-  .login-form-forgot {
-    float: right;
-  }
-  .login-form-button {
-    width: 100%;
-  }
-`;
-
-const WrapperButton = styled.div`
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-`;
-
-const Login = ({ form }) => {
-  const { getFieldDecorator } = form;
-
-  const loading = useSelector((state) => isLoading(LOGIN, state));
-  const dispatch = useDispatch();
-  // const { pathname } = useLocation();
-
+const Login = () => {
   const [showSignUp, setSignUp] = useState(false);
-  // const [showForgot, setForgot] = useState(false);
+  const dispatch = useDispatch();
+  const loading = useSelector(({ user }) => user.loading);
+
+  const { register, handleSubmit, errors } = useForm();
+
+  const onSubmit = (values) => dispatch(login(values));
 
   return (
     <>
-      {/* {R.contains("/validate", pathname) ? (
-        <ValidateUser pathname={pathname} />
-      ) : (
-        <>
-          {R.contains("/recovery", pathname) ? (
-            <RecoveryPassword pathname={pathname} />
-          ) : ( */}
-      <Content>
-        <Form
-          onSubmit={(ev) => {
-            ev.preventDefault();
-            form.validateFields(async (err, values) => {
-              if (!err) {
-                await dispatch(login(values));
-              }
-            });
-          }}
-          className="login-form"
-        >
-          <Form.Item>
-            {getFieldDecorator("email", {
-              rules: [{ required: true, message: "Debe ingresar el usuario" }],
-            })(
-              <Input
-                prefix={
-                  <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
-                }
-                placeholder="Email"
-                autoComplete="email"
-              />
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator("password", {
-              rules: [
-                {
-                  required: true,
-                  message: "Debe ingresar la contraseña",
-                },
-              ],
-            })(
-              <Input
-                prefix={
-                  <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
-                }
-                type="password"
-                placeholder="Contraseña"
-              />
-            )}
-          </Form.Item>
+      <Box borderWidth="1px" margin="auto" maxWidth="md" p={5} rounded="4" shadow="md" width="full">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            ref={register({
+              required: true,
+              pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            })}
+            backgroundColor="white"
+            colorScheme="#FFF"
+            focusBorderColor={errors.email && "red.500"}
+            isInvalid={errors.email}
+            marginTop="2"
+            name="email"
+            placeholder="Email"
+            variant="outline"
+          />
 
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-            loading={loading}
-          >
-            Iniciar sesión
-          </Button>
-          {/* <WrapperButton>
-                  <Button type="link" onClick={() => setForgot(true)}>
-                    Olvidé mi contraseña
-                  </Button>
-                </WrapperButton> */}
-          <WrapperButton>
-            <Button type="link" onClick={() => setSignUp(true)}>
-              Quiero registrarme
+          <Input
+            ref={register({
+              required: true,
+            })}
+            backgroundColor="white"
+            colorScheme="#FFF"
+            focusBorderColor={errors.password && "red.500"}
+            isInvalid={errors.password}
+            marginTop="2"
+            name="password"
+            paddingRight="4.5rem"
+            placeholder="Contraseña"
+            type="password"
+          />
+          <Stack isInline alignItems="center" justifyContent="space-around" marginTop="5">
+            <Button maxWidth="44" width="full" onClick={() => setSignUp(true)}>
+              Registrarme
             </Button>
-          </WrapperButton>
-        </Form>
-      </Content>
-      {/* )}
-        </>
-      )} */}
-
-      {showSignUp && <SignUp visible={showSignUp} setSignUp={setSignUp} />}
-      {/* {showForgot && (
-        <ForgotPassword visible={showForgot} setForgot={setForgot} />
-      )} */}
+            <Button
+              colorScheme="blue"
+              isDisabled={errors.password || errors.email}
+              isLoading={loading}
+              maxWidth="44"
+              type="submit"
+              width="full"
+            >
+              Iniciar sesión
+            </Button>
+          </Stack>
+        </form>
+      </Box>
+      {showSignUp && <SignUp setSignUp={setSignUp} visible={showSignUp} />}
     </>
   );
 };
 
-export default Form.create()(Login);
+export default Login;

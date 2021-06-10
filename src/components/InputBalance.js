@@ -1,30 +1,27 @@
 import React from "react";
-import { InputNumber } from "antd";
-import styled from "styled-components/macro";
-
-const Container = styled.div`
-  margin: auto;
-
-  @media (max-width: 640px) {
-    margin-bottom: 16px;
-  }
-`;
+import {
+  Stack,
+  Text,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+} from "@chakra-ui/react";
+const format = (val) => `$` + val;
 
 const InputBalance = ({ title, value, setValue }) => {
   return (
-    <Container>
-      <h4>{title}:</h4>
-      <InputNumber
-        value={value}
-        style={{ width: 120, marginLeft: 10, marginRight: 10 }}
-        step={100}
-        onChange={setValue}
-        formatter={(value) =>
-          `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-        }
-        parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-      />
-    </Container>
+    <Stack justifyContent="center" width="100%">
+      <Text textAlign="center">{title}:</Text>
+      <NumberInput precision={2} step={100} value={format(value)} onChange={setValue}>
+        <NumberInputField />
+        <NumberInputStepper>
+          <NumberIncrementStepper />
+          <NumberDecrementStepper />
+        </NumberInputStepper>
+      </NumberInput>
+    </Stack>
   );
 };
 

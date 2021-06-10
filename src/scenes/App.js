@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { Spinner } from "@chakra-ui/react";
 import Login from "../components/Auth/Login";
 import Layout from "../components/Layout/Layout";
-import Router from "./Router";
 import { fetchProfile, FETCH_USER } from "../store/actions/user";
 import { isLoading } from "../utils/actions";
-import { Spin } from "antd";
 import { fetchInvoices, FETCH_INVOICES } from "../store/actions/invoices";
+import Router from "./Router";
+import Toasts from "./Toasts";
 
 const Content = styled.div`
   justify-content: center;
   background: white;
-  padding: 30px;
   border-radius: 4px;
   margin: 0 auto;
   width: 100%;
@@ -52,7 +52,14 @@ const App = () => {
   if (isFetching || isFetchingInvoices) {
     return (
       <ContentSpinner>
-        <Spin />
+        <Spinner
+          margin="auto"
+          color="blue.500"
+          emptyColor="gray.200"
+          size="xl"
+          speed="0.65s"
+          thickness="4px"
+        />
       </ContentSpinner>
     );
   }
@@ -60,6 +67,7 @@ const App = () => {
   return (
     <Layout>
       <Content>{token ? <Router /> : <Login />}</Content>
+      <Toasts />
     </Layout>
   );
 };
