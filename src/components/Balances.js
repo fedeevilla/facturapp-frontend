@@ -1,35 +1,11 @@
-import { Button } from "antd";
+import { Button, Box, Stack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components/macro";
+
 import { updateUsdBalance, UPDATE_USER } from "../store/actions/user";
 import { isLoading } from "../utils/actions";
+
 import InputBalance from "./InputBalance";
-
-const Container = styled.div`
-  margin: auto;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-around;
-  align-items: baseline;
-  background: whitesmoke;
-  padding: 20px;
-  border-radius: 15px;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 800px;
-  width: 100%;
-`;
-
-const WrapperBalance = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-
-  @media (max-width: 640px) {
-    flex-direction: column;
-  }
-`;
 
 const Balances = () => {
   const dispatch = useDispatch();
@@ -44,45 +20,33 @@ const Balances = () => {
   const [bankAR, setBankAR] = useState(usdBankAR);
 
   return (
-    <Container>
-      <WrapperBalance>
-        <InputBalance
-          title="USD Home"
-          value={balance}
-          setValue={setBalance}
-          loading={loading}
-        />
-        <InputBalance
-          title="USD Bank US"
-          value={bankUS}
-          setValue={setBankUS}
-          loading={loading}
-        />
-        <InputBalance
-          title="USD Bank AR"
-          value={bankAR}
-          setValue={setBankAR}
-          loading={loading}
-        />
-      </WrapperBalance>
-      <Button
-        style={{ margin: "auto", marginTop: 24 }}
-        type="primary"
-        loading={loading}
-        disabled={loading}
-        onClick={() =>
-          dispatch(
-            updateUsdBalance({
-              usdBalance: Number(balance),
-              usdBankUS: Number(bankUS),
-              usdBankAR: Number(bankAR),
-            })
-          )
-        }
-      >
-        Guardar
-      </Button>
-    </Container>
+    <Box borderWidth="1px" padding="5" shadow="md">
+      <Stack direction={{ base: "column", md: "row" }} spacing={{ base: 2, md: 12 }}>
+        <InputBalance loading={loading} setValue={setBalance} title="USD Home" value={balance} />
+        <InputBalance loading={loading} setValue={setBankUS} title="USD Bank US" value={bankUS} />
+        <InputBalance loading={loading} setValue={setBankAR} title="USD Bank AR" value={bankAR} />
+      </Stack>
+      <Stack justifyContent="center" marginTop="4">
+        <Button
+          colorScheme="blue"
+          isDisabled={loading}
+          isLoading={loading}
+          margin="auto"
+          maxWidth="44"
+          onClick={() =>
+            dispatch(
+              updateUsdBalance({
+                usdBalance: Number(balance),
+                usdBankUS: Number(bankUS),
+                usdBankAR: Number(bankAR),
+              }),
+            )
+          }
+        >
+          Guardar
+        </Button>
+      </Stack>
+    </Box>
   );
 };
 

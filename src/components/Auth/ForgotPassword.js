@@ -2,6 +2,7 @@ import React from "react";
 import * as R from "ramda";
 import { Input, Modal, Form, Button, Icon } from "antd";
 import { useDispatch, useSelector } from "react-redux";
+
 import { sendEmailPassword, RECOVERY_PASSWORD } from "../../store/actions/user";
 import { isLoading } from "../../utils/actions";
 
@@ -13,18 +14,9 @@ const ForgotPassword = ({ form, visible, setForgot }) => {
 
   return (
     <Modal
-      visible={visible}
       destroyOnClose={true}
-      onCancel={() => !loading && setForgot(false)}
-      maskClosable={false}
-      title={`Ingrese su email`}
       footer={[
-        <Button
-          key="close"
-          icon="close-circle"
-          type="default"
-          onClick={() => setForgot(false)}
-        >
+        <Button key="close" icon="close-circle" type="default" onClick={() => setForgot(false)}>
           Cerrar
         </Button>,
         <Button
@@ -45,6 +37,10 @@ const ForgotPassword = ({ form, visible, setForgot }) => {
           Enviar
         </Button>,
       ]}
+      maskClosable={false}
+      title={`Ingrese su email`}
+      visible={visible}
+      onCancel={() => !loading && setForgot(false)}
     >
       <Form layout="horizontal">
         <Form.Item label="Email:" name="email">
@@ -61,10 +57,10 @@ const ForgotPassword = ({ form, visible, setForgot }) => {
             ],
           })(
             <Input
-              prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
-              placeholder="ejemplo@ejemplo.com"
               autoComplete="email"
-            />
+              placeholder="ejemplo@ejemplo.com"
+              prefix={<Icon style={{ color: "rgba(0,0,0,.25)" }} type="mail" />}
+            />,
           )}
         </Form.Item>
       </Form>

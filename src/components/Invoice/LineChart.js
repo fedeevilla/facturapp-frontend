@@ -24,10 +24,11 @@ const LineChart = ({ title, invoices, labels }) => {
         pointHoverBorderWidth: 2,
         pointRadius: 3,
         pointHitRadius: 10,
-        data: invoices
-      }
-    ]
+        data: invoices,
+      },
+    ],
   };
+
   return (
     <div style={{ marginTop: 30 }}>
       <b>{title}</b>

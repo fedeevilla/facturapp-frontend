@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import * as R from "ramda";
 import { Input, Modal, Form, Button, Icon } from "antd";
 import { useDispatch, useSelector } from "react-redux";
+
 import { signup, SIGNUP } from "../../store/actions/user";
 import { isLoading } from "../../utils/actions";
 
@@ -15,9 +16,10 @@ const SignUp = ({ form, visible, setSignUp }) => {
   const handleConfirmBlur = useCallback(
     (e) => {
       const { value } = e.target;
+
       setConfirmDirty({ confirmDirty: confirmDirty || !!value });
     },
-    [confirmDirty]
+    [confirmDirty],
   );
 
   const compareToFirstPassword = useCallback(
@@ -28,7 +30,7 @@ const SignUp = ({ form, visible, setSignUp }) => {
         callback();
       }
     },
-    [form]
+    [form],
   );
 
   const validateToNextPassword = useCallback(
@@ -38,23 +40,14 @@ const SignUp = ({ form, visible, setSignUp }) => {
       }
       callback();
     },
-    [confirmDirty, form]
+    [confirmDirty, form],
   );
 
   return (
     <Modal
-      visible={visible}
       destroyOnClose={true}
-      onCancel={() => !loading && setSignUp(false)}
-      maskClosable={false}
-      title={`Nuevo usuario`}
       footer={[
-        <Button
-          key="close"
-          icon="close-circle"
-          type="default"
-          onClick={() => setSignUp(false)}
-        >
+        <Button key="close" icon="close-circle" type="default" onClick={() => setSignUp(false)}>
           Cerrar
         </Button>,
         <Button
@@ -75,6 +68,10 @@ const SignUp = ({ form, visible, setSignUp }) => {
           Crear
         </Button>,
       ]}
+      maskClosable={false}
+      title={`Nuevo usuario`}
+      visible={visible}
+      onCancel={() => !loading && setSignUp(false)}
     >
       <Form layout="horizontal">
         <Form.Item label="Nombre:" name="name">
@@ -91,10 +88,10 @@ const SignUp = ({ form, visible, setSignUp }) => {
             ],
           })(
             <Input
-              prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
               autoComplete="name"
               placeholder="Ingrese su nombre"
-            />
+              prefix={<Icon style={{ color: "rgba(0,0,0,.25)" }} type="user" />}
+            />,
           )}
         </Form.Item>
         <Form.Item label="Email:" name="email">
@@ -111,13 +108,13 @@ const SignUp = ({ form, visible, setSignUp }) => {
             ],
           })(
             <Input
-              prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
-              placeholder="ejemplo@ejemplo.com"
               autoComplete="email"
-            />
+              placeholder="ejemplo@ejemplo.com"
+              prefix={<Icon style={{ color: "rgba(0,0,0,.25)" }} type="mail" />}
+            />,
           )}
         </Form.Item>
-        <Form.Item label="Contraseña" hasFeedback>
+        <Form.Item hasFeedback label="Contraseña">
           {getFieldDecorator("password", {
             rules: [
               {
@@ -134,7 +131,7 @@ const SignUp = ({ form, visible, setSignUp }) => {
             ],
           })(<Input.Password />)}
         </Form.Item>
-        <Form.Item label="Confirmar contraseña" hasFeedback>
+        <Form.Item hasFeedback label="Confirmar contraseña">
           {getFieldDecorator("confirm", {
             rules: [
               {

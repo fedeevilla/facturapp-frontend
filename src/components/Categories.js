@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import categories from "../assets/categories.png";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
+
+import categories from "../assets/categories.png";
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,7 +22,7 @@ const Categories = () => {
       <Link to="/invoices">
         <Button type="primary">Volver</Button>
       </Link>
-      <img style={{ width: "100%" }} src={categories} alt="Categorias" />
+      <img alt="Categorias" src={categories} style={{ width: "100%" }} />
     </Wrapper>
   );
 };

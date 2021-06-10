@@ -1,9 +1,14 @@
 import { makeAction } from "async-action-creator";
+
 import { createApiThunk } from "../../utils/thunk";
 import api from "../../utils/api";
-import * as R from "ramda";
+// import * as R from "ramda";
 
-export const LOGIN = makeAction("user/LOGIN");
+export const LOGIN_STARTED = "LOGIN_STARTED";
+export const LOGIN_RESOLVED = "LOGIN_RESOLVED";
+export const LOGIN_REJECTED = "LOGIN_REJECTED";
+
+// export const LOGIN = makeAction("user/LOGIN");
 export const LOGOUT = makeAction("user/LOGOUT");
 export const SIGNUP = makeAction("user/SIGNUP");
 export const FETCH_USER = makeAction("user/FETCH_USER");
@@ -14,33 +19,58 @@ export const RECOVERY_PASSWORD = makeAction("user/RECOVERY_PASSWORD");
 
 const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
-export const login = createApiThunk({
-  action: LOGIN,
-  request: async (formData) => {
+// export const login = createApiThunk({
+//   action: LOGIN,
+//   request: async (formData) => {
+//     const data = await api.user.login(formData);
+//     localStorage.setItem("token", data.token);
+
+//     return {
+//       token: data.token,
+//       ...data.user,
+//     };
+//   },
+//   resolvedMessage: {
+//     message: "¡Bienvenido! 👋",
+//     description: "Es un gusto verte nuevamente por acá",
+//   },
+//   rejectedMessage: (error) => {
+//     const status = R.path(["response", "status"], error);
+
+//     return {
+//       message: "Error",
+//       description:
+//         status === 422
+//           ? "No se pudo iniciar sesión. Usuario o contraseña incorrectos"
+//           : "Error intentando iniciar sesión. Intente nuevamente más tarde",
+//     };
+//   },
+// });
+
+export const login = (formData) => async (dispatch) => {
+  dispatch({
+    type: LOGIN_STARTED,
+  });
+  try {
     const data = await api.user.login(formData);
+
     localStorage.setItem("token", data.token);
 
-    return {
-      token: data.token,
-      ...data.user,
-    };
-  },
-  resolvedMessage: {
-    message: "¡Bienvenido! 👋",
-    description: "Es un gusto verte nuevamente por acá",
-  },
-  rejectedMessage: (error) => {
-    const status = R.path(["response", "status"], error);
-
-    return {
-      message: "Error",
-      description:
-        status === 422
-          ? "No se pudo iniciar sesión. Usuario o contraseña incorrectos"
-          : "Error intentando iniciar sesión. Intente nuevamente más tarde",
-    };
-  },
-});
+    dispatch({
+      type: LOGIN_RESOLVED,
+      payload: {
+        token: data.token,
+        ...data.user,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    dispatch({
+      type: LOGIN_REJECTED,
+      payload: "No se pudo iniciar sesión. Usuario o contraseña incorrectos",
+    });
+  }
+};
 
 export const signup = createApiThunk({
   action: SIGNUP,
@@ -126,6 +156,7 @@ export const activateUser = createApiThunk({
   action: ACTIVATE_USER,
   request: async (token) => {
     const data = await api.user.activate(token);
+
     localStorage.setItem("token", token);
     setTimeout(() => {
       window.location.replace("/");
@@ -152,6 +183,7 @@ export const recoveryPassword = createApiThunk({
     setTimeout(() => {
       window.location.replace("/");
     }, 2000);
+
     return {
       message: "Éxito",
       description: "La contraseña se modificó correctamente",

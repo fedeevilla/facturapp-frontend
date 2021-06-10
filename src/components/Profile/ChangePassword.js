@@ -3,6 +3,7 @@ import styled from "styled-components";
 import * as R from "ramda";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Input, Row } from "antd";
+
 import { changePassword, CHANGE_PASSWORD } from "../../store/actions/user";
 import { isLoading } from "../../utils/actions";
 
@@ -24,9 +25,10 @@ const ChangePassword = ({ form }) => {
   const handleConfirmBlur = useCallback(
     (e) => {
       const { value } = e.target;
+
       setConfirmDirty({ confirmDirty: confirmDirty || !!value });
     },
-    [confirmDirty]
+    [confirmDirty],
   );
 
   const compareToFirstPassword = useCallback(
@@ -37,7 +39,7 @@ const ChangePassword = ({ form }) => {
         callback();
       }
     },
-    [form]
+    [form],
   );
 
   const validateToNextPassword = useCallback(
@@ -47,14 +49,14 @@ const ChangePassword = ({ form }) => {
       }
       callback();
     },
-    [confirmDirty, form]
+    [confirmDirty, form],
   );
 
   return (
     <Form layout="horizontal">
       <Container>
         <h2>Seguridad</h2>
-        <Form.Item label="Contraseña actual" hasFeedback>
+        <Form.Item hasFeedback label="Contraseña actual">
           {getFieldDecorator("oldPassword", {
             rules: [
               {
@@ -68,7 +70,7 @@ const ChangePassword = ({ form }) => {
             ],
           })(<Input.Password />)}
         </Form.Item>
-        <Form.Item label="Nueva contraseña" hasFeedback>
+        <Form.Item hasFeedback label="Nueva contraseña">
           {getFieldDecorator("newPassword", {
             rules: [
               {
@@ -85,7 +87,7 @@ const ChangePassword = ({ form }) => {
             ],
           })(<Input.Password onBlur={handleConfirmBlur} />)}
         </Form.Item>
-        <Form.Item label="Confirmar contraseña" hasFeedback>
+        <Form.Item hasFeedback label="Confirmar contraseña">
           {getFieldDecorator("confirm", {
             rules: [
               {
@@ -98,12 +100,12 @@ const ChangePassword = ({ form }) => {
             ],
           })(<Input.Password onBlur={handleConfirmBlur} />)}
         </Form.Item>
-        <Row type="flex" justify="start">
+        <Row justify="start" type="flex">
           <Form.Item>
             <Button
-              type="primary"
               icon="save"
               loading={loading}
+              type="primary"
               onClick={(ev) => {
                 ev.preventDefault();
                 form.validateFields(async (err, values) => {

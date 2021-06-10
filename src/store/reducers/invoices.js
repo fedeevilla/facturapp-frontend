@@ -1,15 +1,16 @@
+import * as R from "ramda";
+
 import {
   FETCH_INVOICES,
   DELETE_INVOICE,
   CREATE_INVOICE,
   UPDATE_INVOICE,
-  DUPLICATE_INVOICE
+  DUPLICATE_INVOICE,
 } from "../actions/invoices";
-import * as R from "ramda";
 
 const initialState = {
   list: null,
-  idLoading: null
+  idLoading: null,
 };
 
 const invoices = (state = initialState, { type, payload = {} }) => {
@@ -17,38 +18,35 @@ const invoices = (state = initialState, { type, payload = {} }) => {
     case FETCH_INVOICES.RESOLVED:
       return {
         ...state,
-        list: payload
+        list: payload,
       };
     case DUPLICATE_INVOICE.STARTED:
       return {
         ...state,
-        idLoading: payload._id
+        idLoading: payload._id,
       };
     case DUPLICATE_INVOICE.RESOLVED:
     case CREATE_INVOICE.RESOLVED:
       return {
         ...state,
         list: R.append(payload, state.list),
-        idLoading: null
+        idLoading: null,
       };
     case DELETE_INVOICE.STARTED:
       return {
         ...state,
-        idLoading: payload
+        idLoading: payload,
       };
     case DELETE_INVOICE.RESOLVED:
       return {
         ...state,
-        list: R.filter(invoice => invoice._id !== payload, state.list),
-        idLoading: null
+        list: R.filter((invoice) => invoice._id !== payload, state.list),
+        idLoading: null,
       };
     case UPDATE_INVOICE.RESOLVED:
       return {
         ...state,
-        list: R.map(
-          invoice => (invoice._id === payload._id ? payload : invoice),
-          state.list
-        )
+        list: R.map((invoice) => (invoice._id === payload._id ? payload : invoice), state.list),
       };
     default:
       return state;
